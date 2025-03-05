@@ -6,7 +6,7 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/04 14:43:05 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/05 21:37:04 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 #include <exception>
 #include <cstring>
 
+
+#include "Replies.hpp"
 #include "Client.hpp"
 
 #define color "\001\033[1;36m\002"
@@ -68,7 +70,13 @@ class Server
         std::vector<Client>::iterator   get_client(int fd);
         void                            ReceiveNewData(int fd);
         void                            clearAll_Fds(int fd_client);
+        void                            userName(int fd, std::string data);
+        void                            nickName(int fd, std::string data);
+        void                            passWord(int fd, std::string data);
+         std::vector<Client>::iterator  client_nick(std::string nick_name);
+        std::vector<std::string>        split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
+        void                            send_msg(std::string msg, int fd);
         ~Server();
 }; 
 
