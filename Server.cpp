@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 22:55:45 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/06 03:32:23 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Channel.hpp"
 
 bool Server::__signal = false;
 
@@ -121,6 +122,8 @@ void Server::ReceiveNewData(int fd)
             nickName(fd, data);
         else if (data.find("PASS") != std::string::npos)
             passWord(fd, data);
+        else if (data.find("JOIN") != std::string::npos)
+            join(fd, data, client);
         if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
         {
             client->set_isRegistred(true);

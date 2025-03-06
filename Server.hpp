@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 21:37:04 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/06 03:34:03 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <cstring>
 
 
+#include "Channel.hpp"
 #include "Replies.hpp"
 #include "Client.hpp"
 
@@ -58,6 +59,7 @@ class Server
         static   bool                      __signal;
         std::vector<struct pollfd>         __fDs;
         std::vector<Client>                __clients;
+        std::vector<Channel>                __channels;
         Server(const Server &src);
         Server &operator=(const Server &src);
     public :
@@ -74,9 +76,14 @@ class Server
         void                            nickName(int fd, std::string data);
         void                            passWord(int fd, std::string data);
          std::vector<Client>::iterator  client_nick(std::string nick_name);
-        std::vector<std::string>        split(const std::string &str, char delimiter);
+        static std::vector<std::string>        split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
         void                            send_msg(std::string msg, int fd);
+
+        //channel
+        void join(int fd, std::string data, Client *_user);
+        
+
         ~Server();
 }; 
 
