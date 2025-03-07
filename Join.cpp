@@ -8,10 +8,24 @@ void createChannel(std::string name, Client *user)
 	channel.set_admin(user);
 }
 
+void sendWelcomeMsg (Client user, Channel room)
+{
+
+    std::vector<Client>& members = room.getMember();
+    for (size_t i = 0; i < members.size(); i++)
+    {
+        std::string msg = user.get_userName() + " has joind the channel";
+        Server::send_msg(msg, user.get_fd());
+    }
+}
+
 void check_key(std::string pass, Client *user, Channel *room, int fd)
 {
 	if (pass == room->get_key())
+    {
 		room->addNewMember(*user);
+        sendWelcomeMsg(*user, *room);
+    }
 	else
 		Server::send_msg(ERR_INCORPASS(user->get_nickName()), fd);
 }
@@ -20,7 +34,17 @@ void Server::leaveChannels(Client *user)
 {
     for (size_t i = 0; i < this->__channels.size(); i++)
     {
-        std::vector<Channel>::iterator it = this->__channels[i].;
+        std::vector<Client>& members = __channels[i].getMember();
+        std::vector<Client>::iterator it = members.begin();
+        while (it != members.end())
+        {
+            if (user->get_fd() == it->get_fd())
+            {
+                it = members.erase(it);
+                break;
+            }
+            it++;
+        }
 
     }
 }

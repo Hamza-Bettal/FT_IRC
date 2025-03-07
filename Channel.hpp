@@ -40,7 +40,7 @@ class Channel
         //setters
         void set_key(std::string key);
         void set_admin(Client *user);
-        std::vector<Client>::iterator getMember();
+        std::vector<Client>& getMember();
 
         void addNewMember(Client user);
 };
