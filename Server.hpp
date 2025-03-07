@@ -76,9 +76,9 @@ class Server
         void                            nickName(int fd, std::string data);
         void                            passWord(int fd, std::string data);
          std::vector<Client>::iterator  client_nick(std::string nick_name);
-        static std::vector<std::string>        split(const std::string &str, char delimiter);
+        static std::vector<std::string> split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
-        void                            send_msg(std::string msg, int fd);
+        static void                     send_msg(std::string msg, int fd);
 
         //channel
         void join(int fd, std::string data, Client *_user);

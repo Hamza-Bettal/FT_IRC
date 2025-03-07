@@ -40,6 +40,8 @@ class Channel
         //setters
         void set_key(std::string key);
         void set_admin(Client *user);
+
+        void addNewMember(Client user);
         
         
 };
