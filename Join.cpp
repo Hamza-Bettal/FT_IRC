@@ -16,6 +16,15 @@ void check_key(std::string pass, Client *user, Channel *room, int fd)
 		Server::send_msg(ERR_INCORPASS(user->get_nickName()), fd);
 }
 
+void Server::leaveChannels(Client *user)
+{
+    for (size_t i = 0; i < this->__channels.size(); i++)
+    {
+        std::vector<Channel>::iterator it = this->__channels[i].;
+
+    }
+}
+
 void Server::join(int fd, std::string data, Client *user)
 {   
 	std::vector<std::string> channel = Server::split(data, ' ');
@@ -28,6 +37,8 @@ void Server::join(int fd, std::string data, Client *user)
 	std::string pass;
 	if (channel.size() > 2)
 		pass = channel[2];
+    if (name[0] == '0')
+        this->leaveChannels(user);
 	if (name[0] != '#' || name[0] != '&')
 	{
 		//errmsg

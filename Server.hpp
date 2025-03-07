@@ -82,6 +82,7 @@ class Server
 
         //channel
         void join(int fd, std::string data, Client *_user);
+        void leaveChannels(Client *user);
         
 
         ~Server();

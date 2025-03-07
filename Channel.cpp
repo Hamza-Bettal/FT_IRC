@@ -45,3 +45,9 @@ void Channel::addNewMember(Client user)
 {
 	this->members.push_back(user);
 }
+
+std::vector<Client>::iterator Channel::getMember()
+{
+	std::vector<Client>::iterator it = members.begin();
+	return (it);
+}
