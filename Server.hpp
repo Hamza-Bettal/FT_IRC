@@ -6,7 +6,7 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 21:37:04 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/08 04:10:57 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 
 #include "Replies.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 
 #define color "\001\033[1;36m\002"
 #define pos "\001\033[0;0m\002"
@@ -58,6 +59,7 @@ class Server
         static   bool                      __signal;
         std::vector<struct pollfd>         __fDs;
         std::vector<Client>                __clients;
+        std::vector<Channel>                __channels;
         Server(const Server &src);
         Server &operator=(const Server &src);
     public :
@@ -65,7 +67,6 @@ class Server
         void                            Server_Launcher();
         void                            ServerSocket();
         void                            addNew_Client();
-        int                             get_Port();
         int                             get_Fdsocket();
         std::vector<Client>::iterator   get_client(int fd);
         void                            ReceiveNewData(int fd);
@@ -76,7 +77,17 @@ class Server
          std::vector<Client>::iterator  client_nick(std::string nick_name);
         std::vector<std::string>        split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
-        void                            send_msg(std::string msg, int fd);
+        static void                            send_msg(std::string msg, int fd);
+        void                            rmoveNew_line(std::string &str);
+        bool                            parce_nick(std::string nick);
+        static bool                     setPort(std::string str, int &port);
+        static bool                     check_Passowrd(std::string password);
+        void                            handleCommands(int fd, std::string &data, Client *client);
+
+        //channel
+
+        void                            join(int fd, std::string data, Client *_user);
+        void                            leaveChannels(Client *user);
         ~Server();
 }; 
 

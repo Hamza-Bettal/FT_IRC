@@ -6,7 +6,7 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 22:55:45 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/09 22:52:33 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,47 +89,66 @@ void Server::addNew_Client()
 
 void Server::ReceiveNewData(int fd)
 {
-    char buff[1024];
-    memset(buff, 0, sizeof(buff));
+    char buff[1024] = {0};
     size_t num_bytes = recv(fd, buff, sizeof(buff) - 1, 0);
     std::string data;
     Client *client = NULL;
     if (num_bytes <= 0)
     {
-        std::cout << b_italic color "==>Client <" pos << fd << RED "> Disconnected" pos<< std::endl;
-        clearAll_Fds(fd);
-        close(fd);
-    }
-    else
-    {
-        for (size_t i = 0; i < __clients.size(); i++)
+        if (num_bytes == 0)
         {
-            if (__clients[i].get_fd() == fd)
-            {   
-                client = &__clients[i];
-                break;
+            std::cout << b_italic color "==>Client <" pos << fd << b_italic RED "> Disconnected" pos<< std::endl;
+            for (size_t i = 0; i < __clients.size(); i++)
+            {
+                if (__clients[i].get_fd() == fd)
+                {
+                    __clients.erase(__clients.begin() + i);
+                    __clients[i].set_isRegistred(false);
+                    __clients[i].set_hasNick(false);
+                    __clients[i].set_hasPass(false);
+                    __clients[i].set_hasUser(false);
+                    break;
+                }
             }
         }
-        if (client == NULL)
-            return ;
-        data = buff;
-        if (client->get_isRegistred())
-            return ;
-        if (data.find("USER") != std::string::npos)
-            userName(fd, data);
-        else if (data.find("NICK") != std::string::npos)
-            nickName(fd, data);
-        else if (data.find("PASS") != std::string::npos)
-            passWord(fd, data);
-        if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
-        {
-            client->set_isRegistred(true);
-            send_msg(RPL_WELCOME(client->get_nickName().erase(client->get_nickName().find("\n")), "Welcome to the IRC server"), fd);
-        }
-        buff[num_bytes] = '\0';
-        std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << buff;
+        else
+            std::cout << b_italic color "==>Client <" pos << fd << b_italic RED "> Error" pos << std::endl;
+        clearAll_Fds(fd);
+        return ;
     }
+    buff[num_bytes] = '\0';
+    for (size_t i = 0; i < __clients.size(); i++)
+    {
+        if (__clients[i].get_fd() == fd)
+        {   
+            client = &__clients[i];
+            break;
+        }
+    }
+    if (client == NULL)
+        return ;
+    data = buff;
+    rmoveNew_line(data);
+    handleCommands(fd, data, client);
+    if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
+    {
+        client->set_isRegistred(true);
+        send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
+    }
+    std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << buff;
     
+}
+
+void Server::handleCommands(int fd, std::string &data, Client *client)
+{
+   if (data.find("USER ") != std::string::npos)
+        userName(fd, data);
+    else if (data.find("NICK ") != std::string::npos)
+        nickName(fd, data);
+    else if (data.find("PASS ") != std::string::npos)
+        passWord(fd, data);
+    else if (data.find("JOIN ") != std::string::npos)
+        join(fd, data, client);
 }
 
 void Server::clearAll_Fds(int fd_client)
@@ -148,11 +167,6 @@ void Server::clearAll_Fds(int fd_client)
 Server::~Server()
 {
     close(__fd_socket);
-}
-
-int Server::get_Port()
-{
-    return __port;
 }
 
 int Server::get_Fdsocket()
@@ -185,7 +199,7 @@ void Server::userName(int fd, std::string data)
         send_msg(ERR_NOTREGISTERED, fd);
         return ;
     }
-    if (count >= 4 || it != __clients.end())
+    if (count >= 4)
     {
         it->set_userName(valid_user);
         it->set_hasUser(true);
@@ -200,15 +214,58 @@ std::vector<Client>::iterator Server::client_nick(std::string nick_name)
     return __clients.end();
 }
 
+void Server::rmoveNew_line(std::string &str)
+{
+    std::string s= str;
+    int i = str.size() - 1;
+    while(str[i] == '\n' || str[i] == '\r')
+    {
+        str.erase(i);
+        i--;
+    }
+}
+
+
+bool Server::parce_nick(std::string nick)
+{
+    int i = 0;
+    while (nick[i])
+    {
+        if (i == 0 && !std::isalpha(nick[i]))
+            return false;
+        if (std::isspace(nick[i]))
+            return false;
+        else if (nick[i] != '[' && nick[i] != ']' && nick[i] != '\\' && nick[i] != '{' && nick[i] != '}' && nick[i] != '|' && !std::isalpha(nick[i]))
+            return false;
+        i++;
+    }
+    return true;
+}
+
+
 void Server::nickName(int fd, std::string data)
 {
     std::string nick = data.substr(5, data.size() - 5);
     std::vector<Client>::iterator it = get_client(fd);
-
-    if (!it->get_hasPass()) 
+    rmoveNew_line(nick);
+    if (!parce_nick(nick))
     {
-        send_msg(ERR_NOTREGISTERED, fd);
-        return ;
+        send_msg(ERR_ERRONEUSNICKNAME(nick), fd);
+        return;
+    }
+    else if (!it->get_hasPass()) 
+    {
+        send_msg(ERR_NOTREGISTERED,fd);
+        return;
+    }
+    for (std::vector<Client>::iterator client = __clients.begin(); client != __clients.end(); ++client)
+    {
+        
+        if (client->get_nickName() == nick)
+        {
+            send_msg(ERR_NICKNAMEINUSE(nick), fd);
+            return;
+        }
     }
     if (it != __clients.end())
     {
@@ -217,23 +274,16 @@ void Server::nickName(int fd, std::string data)
     }
 }
 
+
 void Server::passWord(int fd, std::string data)
 {
-   std::string pass = data.substr(5, data.size() - 5);
-   
+    std::string pass = data.substr(5, data.size() - 5);
     std::vector<Client>::iterator it = get_client(fd);
-    if (pass.find("\r\n") != std::string::npos)
-        pass = pass.erase(pass.find("\r\n"));
-    else
-        pass = pass.erase(pass.find("\n"));
-   if (pass == __passWord)
+    rmoveNew_line(pass);
+    if (pass == __passWord)
         it->set_hasPass(true);
-   else
-   {
+    else
         send_msg(ERR_PASSWDMISMATCH(it->get_nickName()), fd);
-        clearAll_Fds(fd);
-        close(fd);
-   }
 
 }
 
@@ -251,4 +301,24 @@ std::vector<std::string> Server::split(const std::string &str, char delimiter)
 void Server::send_msg(std::string msg, int fd)
 {
     send(fd, msg.c_str(), msg.size(), 0);
+}
+
+bool Server::setPort(std::string str, int &port)
+{
+    std::stringstream ss(str);
+
+    ss >> port;
+    return ((ss.eof() && !ss.fail()) && !(port < 1024 || port > 65535));
+}
+
+bool Server::check_Passowrd(std::string password)
+{
+    if (password.empty())
+        return false;
+    for (int i = 0; i < static_cast<int>(password.size()); i++)
+    {
+        if (std::isspace(password[i]))
+            return false;
+    }
+    return true;
 }
