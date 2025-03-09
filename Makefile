@@ -1,6 +1,6 @@
 C++ = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98
-SRC = main.cpp Server.cpp Client.cpp Channel.cpp Join.cpp
+FLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+SRC = main.cpp Server.cpp Client.cpp
 NAME = irc
 OBJCS = $(SRC:.cpp=.o)
 

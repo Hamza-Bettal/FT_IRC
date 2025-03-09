@@ -6,11 +6,12 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/09 22:52:33 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/09 22:59:58 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Channel.hpp"
 
 bool Server::__signal = false;
 
@@ -116,39 +117,36 @@ void Server::ReceiveNewData(int fd)
         clearAll_Fds(fd);
         return ;
     }
-    buff[num_bytes] = '\0';
-    for (size_t i = 0; i < __clients.size(); i++)
+    else
     {
-        if (__clients[i].get_fd() == fd)
-        {   
-            client = &__clients[i];
-            break;
+        for (size_t i = 0; i < __clients.size(); i++)
+        {
+            if (__clients[i].get_fd() == fd)
+            {   
+                client = &__clients[i];
+                break;
+            }
         }
+        if (client == NULL)
+            return ;
+        data = buff;
+        if (client->get_isRegistred())
+            return ;
+        if (data.find("USER") != std::string::npos)
+            userName(fd, data);
+        else if (data.find("NICK") != std::string::npos)
+            nickName(fd, data);
+        else if (data.find("PASS") != std::string::npos)
+            passWord(fd, data);
+        if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
+        {
+            client->set_isRegistred(true);
+            send_msg(RPL_WELCOME(client->get_nickName().erase(client->get_nickName().find("\n")), "Welcome to the IRC server"), fd);
+        }
+        buff[num_bytes] = '\0';
+        std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << buff;
     }
-    if (client == NULL)
-        return ;
-    data = buff;
-    rmoveNew_line(data);
-    handleCommands(fd, data, client);
-    if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
-    {
-        client->set_isRegistred(true);
-        send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
-    }
-    std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << buff;
     
-}
-
-void Server::handleCommands(int fd, std::string &data, Client *client)
-{
-   if (data.find("USER ") != std::string::npos)
-        userName(fd, data);
-    else if (data.find("NICK ") != std::string::npos)
-        nickName(fd, data);
-    else if (data.find("PASS ") != std::string::npos)
-        passWord(fd, data);
-    else if (data.find("JOIN ") != std::string::npos)
-        join(fd, data, client);
 }
 
 void Server::clearAll_Fds(int fd_client)

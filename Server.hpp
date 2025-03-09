@@ -6,7 +6,7 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/08 04:10:57 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/09 22:58:15 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <cstring>
 
 
+#include "Channel.hpp"
 #include "Replies.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
@@ -75,7 +76,7 @@ class Server
         void                            nickName(int fd, std::string data);
         void                            passWord(int fd, std::string data);
          std::vector<Client>::iterator  client_nick(std::string nick_name);
-        std::vector<std::string>        split(const std::string &str, char delimiter);
+        static std::vector<std::string> split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
         static void                            send_msg(std::string msg, int fd);
         void                            rmoveNew_line(std::string &str);
