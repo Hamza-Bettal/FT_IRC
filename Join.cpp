@@ -3,14 +3,6 @@
 #include <cstddef>
 #include <vector>
 
-// void createChannel(std::string name, Client *user)
-// {
-// 	Channel channel(name);
-	
-// 	channel.set_admin(user);
-
-// }
-
 void sendWelcomeMsg (Client user, Channel room)
 {
 
@@ -49,45 +41,15 @@ void Server::leaveChannels(Client *user)
         }
     }
 }
-void Server::topic(std::string data, Client *user)
-{
-	std::vector<std::string> topic = Server::split(data, ' ');
-	if (topic.size() < 2)
-	{
-		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user->get_fd());
-		return ;
-	}
-	if (topic[1][0] != '#' && topic[1][0] != '&')
-	{
-		//TODO: err msg
-		return ;
-	}
-	topic[1].substr(1, topic[1].size() - 1);
-	for (size_t i = 0; i < __channels.size(); i++)
-	{
-		if (topic[1] == __channels[i].get_name())
-		{
-			if (topic.size() < 3)
-				Server::send_msg(RPL_TOPIC(user->get_nickName(), topic[1], __channels[i].get_topic()), user->get_fd());
-			else if (topic[2][0] == ':')
-			{
-				if (topic[2].size() == 1)
-					__channels[i].set_topic("");
-				else
-					__channels[i].set_topic(topic[2].substr(1, topic[2].size() - 1));
-			}
-			// else
-			// 	//TODO: err msg no ':'
-		}
-	}
-}
+
+
 void Server::join(int fd, std::string data, Client *user) //FIXME:
 {  
 	std::vector<std::string> channel = Server::split(data, ' ');
-	
+
 	if (channel.size() < 2)
 	{
-		//err msg
+		//TODO: err msg
 	}
 	std::vector<std::string> name = Server::split(channel[1], ',');
 	std::string pass;
@@ -99,7 +61,7 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 			this->leaveChannels(user);
 		if (name[i][0] != '#' || name[i][0] != '&')
 		{
-			//errmsg
+			//TODO: err msg
 		}
 		name[i].substr(1, name.size() - 1);
 		size_t j;

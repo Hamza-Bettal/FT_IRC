@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/10 01:52:51 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:53:32 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,9 @@ void Server::ReceiveNewData(int fd)
             {
                 if (__clients[i].get_fd() == fd)
                 {
-                    __clients.erase(__clients.begin() + i);
                     __clients[i].set_isRegistred(false);
-                    __clients[i].set_hasNick(false);
-                    __clients[i].set_hasPass(false);
-                    __clients[i].set_hasUser(false);
-                    break;
+					__clients[i].set_nickName("");
+					break;
                 }
             }
         }
@@ -130,7 +127,7 @@ void Server::ReceiveNewData(int fd)
     data = buff;
     rmoveNew_line(data);
     handleCommands(fd, data, client);
-    if (!client->get_isRegistred() && client->get_hasPass() && client->hasNick() && client->hasUser())
+    if (!(client->get_isRegistred()) && client->get_hasPass() && client->hasNick() && client->hasUser())
     {
         client->set_isRegistred(true);
         send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
@@ -237,7 +234,7 @@ bool Server::parce_nick(std::string nick)
             return false;
         if (std::isspace(nick[i]))
             return false;
-        else if (nick[i] != '[' && nick[i] != ']' && nick[i] != '\\' && nick[i] != '{' && nick[i] != '}' && nick[i] != '|' && !std::isalpha(nick[i]))
+        else if (nick[i] != '[' && nick[i] != ']' && nick[i] != '\\' && nick[i] != '{' && nick[i] != '}' && nick[i] != '|' && !std::isalnum(nick[i]))
             return false;
         i++;
     }

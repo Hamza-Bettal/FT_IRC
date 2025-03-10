@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:06:32 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/10 01:47:49 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/10 23:35:49 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class Channel
         void set_key(std::string key);
 		void set_topic(std::string topic);
         void set_admin(Client *user);
-        std::vector<Client>& getMember();
+        std::vector<Client>& getMembers();
 
         void addNewMember(Client user);
 };
