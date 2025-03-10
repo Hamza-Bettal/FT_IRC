@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:53:53 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 22:09:53 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/10 01:53:36 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
         std::string    __ip_add;
         std::string    __nick_name;
         std::string    __user_name;
-        bool           __has_pass;
+        bool           __hasPass;
         bool           __isRegistred;
         bool           __hasUser;
         bool           __hasNick;
@@ -40,8 +40,8 @@
         std::string    &get_nickName();
         bool           get_hasPass() const;
         bool           get_isRegistred() const;
-        bool           get_hasUser() const;
-        bool           get_hasNick() const;
+        bool           hasUser() const;
+        bool           hasNick() const;
 
         //============ setters ============
 
@@ -49,7 +49,7 @@
         void        set_IpAdd(std::string ipadd);
         void        set_userName(std::string user_name);
         void        set_nickName(std::string nick_name);
-        void        set_hasPass(bool has_pass);
+        void        set_hasPass(bool hasPass);
         void        set_isRegistred(bool is_registred);
         void        set_hasUser(bool has_user);
         void        set_hasNick(bool has_nick);

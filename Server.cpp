@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/09 23:09:17 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/10 01:52:51 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void Server::ReceiveNewData(int fd)
     data = buff;
     rmoveNew_line(data);
     handleCommands(fd, data, client);
-    if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
+    if (!client->get_isRegistred() && client->get_hasPass() && client->hasNick() && client->hasUser())
     {
         client->set_isRegistred(true);
         send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
@@ -141,7 +141,7 @@ void Server::ReceiveNewData(int fd)
 
 void Server::handleCommands(int fd, std::string &data, Client *client)
 {
-   if (data.find("USER ") != std::string::npos)
+	if (data.find("USER ") != std::string::npos)
         userName(fd, data);
     else if (data.find("NICK ") != std::string::npos)
         nickName(fd, data);
@@ -149,6 +149,8 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         passWord(fd, data);
     else if (data.find("JOIN ") != std::string::npos)
         join(fd, data, client);
+    else if (data.find("TOPIC ") != std::string::npos)
+		topic(data, client);
 }
 
 void Server::clearAll_Fds(int fd_client)

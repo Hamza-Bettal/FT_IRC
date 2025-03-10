@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:59:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/05 22:28:11 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/10 01:53:36 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Client::Client()
     __ip_add = "";
     __user_name = "";
     __nick_name = "";
-    __has_pass = false;
+    __hasPass = false;
     __isRegistred = false;
     __hasUser = false;
     __hasNick = false;  
@@ -74,7 +74,7 @@ std::string &Client::get_userName()
 
 bool           Client::get_hasPass() const
 {
-    return __has_pass;
+    return __hasPass;
 }
 
 void        Client::set_Fd(int fd)
@@ -97,9 +97,9 @@ void Client::set_nickName(std::string nick_name)
     __nick_name = nick_name;
 }
 
-void Client::set_hasPass(bool has_pass)
+void Client::set_hasPass(bool hasPass)
 {
-    __has_pass = has_pass;
+    __hasPass = hasPass;
 }
 
 void Client::set_isRegistred(bool is_registred)
@@ -117,7 +117,7 @@ void Client::set_hasUser(bool has_user)
     __hasUser = has_user;
 }
 
-bool Client::get_hasUser() const
+bool Client::hasUser() const
 {
     return __hasUser;
 }
@@ -127,7 +127,7 @@ void Client::set_hasNick(bool has_nick)
     __hasNick = has_nick;
 }
 
-bool Client::get_hasNick() const
+bool Client::hasNick() const
 {
     return __hasNick;
 }
