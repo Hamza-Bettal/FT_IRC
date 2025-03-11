@@ -6,7 +6,7 @@
 /*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 16:08:02 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/11 16:55:49 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,28 +130,27 @@ void Server::ReceiveNewData(int fd)
     }
     if (client == NULL)
         return ;
-     client->get_buffer().append(buff);
+    // append the buffer to the client buffer
+    // check if client buffer had new line
+        // if yes execute it
+    client->get_buffer().append(buff);
     size_t poss;
-    while ((poss = client->get_buffer().find('\n')) != std::string::npos)
+    if ((poss = client->get_buffer().find('\n')) != std::string::npos)
     {
         std::string command = client->get_buffer().substr(0, poss);
         client->get_buffer().erase(0, poss + 1);
         // rmoveNew_line(command);
         handleCommands(fd, command, client);
+        std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << command << std::endl;
+    
     }
-
-    while ((poss = client->get_buffer().find('\x04')) != std::string::npos)
-    {
-        std::string command = client->get_buffer().substr(0, poss);
-        client->get_buffer().erase(0, poss + 1);
-        handleCommands(fd, command, client);
-    }
+    else 
+        client->get_buffer().append(" ");
     if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
     {
         client->set_isRegistred(true);
         send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
     }
-    std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << buff;
     
 }
 
