@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/11 04:24:43 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/11 18:27:41 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ void Server::invite(std::string data, Client user)
 
 	if (command.size() != 3)
 	{
-		//TODO: err msg that the number of argements is wrong
+		Server::send_msg(ERR_NEEDMOREPARAMS(data), user.get_fd());
 		return ;
 	}
 	if (command[2][0] != '#' && command[2][0] != '&')
 	{
-		//channel name should start with # or &
+		Server::send_msg(ERR_NOSUCHCHANNEL(command[2]), user.get_fd());
 		return ;
 	}
 	Client newMember;
@@ -55,13 +55,13 @@ void Server::invite(std::string data, Client user)
 				}
 				else
 				{
-					//TODO: err msg the member is already in the channel
+					Server::send_msg(ERR_USERONCHANNEL(command[2], command[1]), user.get_fd());
 				}
 			}
+			else
+				Server::send_msg(ERR_CHANOPRIVSNEEDED(command[2]), user.get_fd());
 		}
 	}
 	if (i == __channels.size())
-	{
-		//TODO: err msg channel not found
-	}
+		Server::send_msg(ERR_NOSUCHCHANNEL(command[2]), user.get_fd());
 }
