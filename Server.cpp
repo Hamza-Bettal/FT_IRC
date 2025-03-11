@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/10 22:53:32 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/11 03:55:57 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         join(fd, data, client);
     else if (data.find("TOPIC ") != std::string::npos)
 		topic(data, client);
+    else if (data.find("INVITE ") != std::string::npos)
+        invite(data, *client);
 }
 
 void Server::clearAll_Fds(int fd_client)
