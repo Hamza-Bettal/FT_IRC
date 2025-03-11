@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:53:53 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/10 01:53:36 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:56:19 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
         bool           __isRegistred;
         bool           __hasUser;
         bool           __hasNick;
+        std::string    __buffer;
     public:
 
         Client(const Client &src);
@@ -40,8 +41,9 @@
         std::string    &get_nickName();
         bool           get_hasPass() const;
         bool           get_isRegistred() const;
-        bool           hasUser() const;
-        bool           hasNick() const;
+        bool           get_hasUser() const;
+        bool           get_hasNick() const;
+        std::string    &get_buffer();
 
         //============ setters ============
 

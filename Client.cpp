@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:59:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/10 01:53:36 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:57:24 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void Client::set_hasUser(bool has_user)
     __hasUser = has_user;
 }
 
-bool Client::hasUser() const
+bool Client::get_hasUser() const
 {
     return __hasUser;
 }
@@ -127,7 +127,12 @@ void Client::set_hasNick(bool has_nick)
     __hasNick = has_nick;
 }
 
-bool Client::hasNick() const
+bool Client::get_hasNick() const
 {
     return __hasNick;
+}
+
+std::string &Client::get_buffer()
+{
+    return __buffer;
 }

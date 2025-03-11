@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 03:55:57 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/11 16:08:02 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void Server::ServerSocket()
     __fd_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (__fd_socket == -1)
         throw std::runtime_error("Error: socket failed");
-    if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)//allow a server to reuse a recently closed port without waiting for it to be released by the operating system
         throw std::runtime_error("Error: setsockopt failed");
     if (fcntl(__fd_socket, F_SETFL, O_NONBLOCK) < 0)
         throw std::runtime_error("Error: fcntl failed");
@@ -50,9 +50,11 @@ void Server::ServerSocket()
     addr.sin_port = htons(__port);
     if (bind(__fd_socket, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         throw std::runtime_error("Error: bind failed");
-    if (listen(__fd_socket, 3) < 0)
+    if (listen(__fd_socket, 42) < 0)
         throw std::runtime_error("Error: listen failed");
     struct pollfd pfd;
+    std::cout << gold"Server is running on port " pos << __port << std::endl;
+    std::cout << color "Server is waiting for connections" pos << std::endl;
     pfd.fd = __fd_socket;
     pfd.events = POLLIN;
     pfd.revents = 0;
@@ -79,6 +81,7 @@ void Server::addNew_Client()
         Client c;
         c.set_Fd(new_socket);
         __clients.push_back(c);
+        std::cout << violet "New client connected" pos << std::endl;
     }
     for (size_t i = 1; i < __fDs.size(); i++)
     {
@@ -103,8 +106,11 @@ void Server::ReceiveNewData(int fd)
                 if (__clients[i].get_fd() == fd)
                 {
                     __clients[i].set_isRegistred(false);
-					__clients[i].set_nickName("");
-					break;
+                    __clients[i].set_hasNick(false);
+                    __clients[i].set_hasPass(false);
+                    __clients[i].set_hasUser(false);
+                    __clients.erase(__clients.begin() + i);
+                    break;
                 }
             }
         }
@@ -124,10 +130,23 @@ void Server::ReceiveNewData(int fd)
     }
     if (client == NULL)
         return ;
-    data = buff;
-    rmoveNew_line(data);
-    handleCommands(fd, data, client);
-    if (!(client->get_isRegistred()) && client->get_hasPass() && client->hasNick() && client->hasUser())
+     client->get_buffer().append(buff);
+    size_t poss;
+    while ((poss = client->get_buffer().find('\n')) != std::string::npos)
+    {
+        std::string command = client->get_buffer().substr(0, poss);
+        client->get_buffer().erase(0, poss + 1);
+        // rmoveNew_line(command);
+        handleCommands(fd, command, client);
+    }
+
+    while ((poss = client->get_buffer().find('\x04')) != std::string::npos)
+    {
+        std::string command = client->get_buffer().substr(0, poss);
+        client->get_buffer().erase(0, poss + 1);
+        handleCommands(fd, command, client);
+    }
+    if (!client->get_isRegistred() && client->get_hasPass() && client->get_hasNick() && client->get_hasUser())
     {
         client->set_isRegistred(true);
         send_msg(RPL_WELCOME(client->get_nickName(), "Welcome to the IRC server"), fd);
@@ -138,17 +157,17 @@ void Server::ReceiveNewData(int fd)
 
 void Server::handleCommands(int fd, std::string &data, Client *client)
 {
-	if (data.find("USER ") != std::string::npos)
+	if (!std::strncmp(data.c_str(), "USER ", 5))
         userName(fd, data);
-    else if (data.find("NICK ") != std::string::npos)
+    else if (!std::strncmp(data.c_str(), "NICK ", 5))
         nickName(fd, data);
-    else if (data.find("PASS ") != std::string::npos)
+    else if (!std::strncmp(data.c_str(), "PASS ", 5))
         passWord(fd, data);
-    else if (data.find("JOIN ") != std::string::npos)
+    else if (!std::strncmp(data.c_str(), "JOIN ", 5))
         join(fd, data, client);
-    else if (data.find("TOPIC ") != std::string::npos)
+    else if (!std::strncmp(data.c_str(), "TOPIC ", 5))
 		topic(data, client);
-    else if (data.find("INVITE ") != std::string::npos)
+    else if (!std::strncmp(data.c_str(), "INVITE ", 7))
         invite(data, *client);
 }
 
