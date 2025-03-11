@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:53:53 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 15:56:19 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/11 22:17:56 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
  class Client
 {
     private:
-        int            __fDs;
-        std::string    __ip_add;
-        std::string    __nick_name;
-        std::string    __user_name;
-        bool           __hasPass;
-        bool           __isRegistred;
-        bool           __hasUser;
-        bool           __hasNick;
-        std::string    __buffer;
+        int        		__fDs;
+        std::string		__ip_add;
+        std::string		__nick_name;
+        std::string		__user_name;
+        bool       		__hasPass;
+        bool       		__isRegistred;
+        bool       		__hasUser;
+        bool       		__hasNick;
+        std::string		__buffer;
     public:
 
         Client(const Client &src);
@@ -55,7 +55,6 @@
         void        set_isRegistred(bool is_registred);
         void        set_hasUser(bool has_user);
         void        set_hasNick(bool has_nick);
-
 }; 
 
 #endif

@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/11 04:23:43 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/11 22:19:53 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include "Channel.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
-#include <sstream>
 #include <vector>
-
 
 Channel ::Channel(std::string name) : name(name){}
 
@@ -26,9 +25,9 @@ std::string Channel :: get_name()
 {
 	return (name);
 }
-Client* Channel :: get_admin()
+std::vector<Client> Channel :: get_admins()
 {
-	return (admin);
+	return (admins);
 }
 
 std::string Channel :: get_topic()
@@ -46,9 +45,9 @@ void Channel :: set_key(std ::string key)
 	this->key = key;
 }
 
-void Channel :: set_admin(Client *user)
+void Channel :: set_admin(Client user)
 {
-	admin = user;
+	admins.push_back(user);
 }
 
 void Channel::set_topic(std::string _topic)
@@ -78,4 +77,19 @@ void Channel::sendWelcomeMsg(Client user, Channel room)
     {
         Server::send_msg(RPL_WELCOME(user.get_userName(), " has joind the channel"), members[i].get_fd());
     }
+}
+
+bool Channel::isAdmine(Client user)
+{
+	for (size_t i = 0; i < admins.size(); i++)
+	{
+		if (user.get_fd() == admins[i].get_fd())
+			return true;
+	}
+	return false;
+}
+
+bool Channel::topicModeOn()
+{
+	return (topicMode);
 }

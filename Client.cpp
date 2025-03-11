@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:59:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 15:57:24 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/11 22:26:09 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ Client::Client(const Client &src)
 {
     *this = src;
 }
+
 int            Client::get_fd() const
 {
     return __fDs;

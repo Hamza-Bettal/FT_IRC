@@ -66,7 +66,7 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 		if (j == __channels.size())
 		{
 			Channel room(name[i]);
-			room.set_admin(user);
+			room.set_admin(*user);
 			room.addNewMember(*user);
 			this->__channels.push_back(room);
 			Channel::sendWelcomeMsg(*user, room);
