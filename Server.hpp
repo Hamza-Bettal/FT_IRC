@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/10 23:18:06 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/11 23:54:20 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ class Server
         Server &operator=(const Server &src);
     public :
         Server(int port, std::string pass_word);
+
+		//getters
+
+		Channel *getChannel(std::string name);
+		Client *getClient(std::string name);
+		
         void                            Server_Launcher();
         void                            ServerSocket();
         void                            addNew_Client();
@@ -90,6 +96,7 @@ class Server
         void                            join(int fd, std::string data, Client *_user);
 		void							topic(std::string data, Client *user);
 		void							invite(std::string data, Client user);
+		void							mode(std::string data, Client user);
         void                            leaveChannels(Client *user);
         ~Server();
 }; 

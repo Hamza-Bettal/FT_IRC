@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/11 22:46:19 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/12 00:01:40 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,12 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_NOSUCHCHANNEL(command[2]), user.get_fd());
 		return ;
 	}
-	Client newMember;
-	size_t i;
-	for (i = 0; i < __clients.size(); i++)
-	{
-		if (__clients[i].get_nickName() == command[1])
-		{
-			newMember = __clients[i];
-			break ;
-		}
-	}
-	if (i == __clients.size())
-		return ;
+	Client *newMember = getClient(command[1]);
+	if (!newMember)
+		return;
+	
 	command[2].substr(1, command[2].size() - 1);
+	size_t i;
 	for (i = 0; i < __channels.size(); i++)
 	{
 		if (__channels[i].get_name() == command[2])
@@ -57,10 +50,10 @@ void Server::invite(std::string data, Client user)
 				Server::send_msg(ERR_CHANOPRIVSNEEDED(command[2]), user.get_fd());
 				return ;
 			}
-			if (!__channels[i].memberExist(newMember))
+			if (!__channels[i].memberExist(*newMember))
 			{
-				__channels[i].addNewMember(newMember);
-				Channel::sendWelcomeMsg(newMember, __channels[i]);
+				__channels[i].addNewMember(*newMember);
+				Channel::sendWelcomeMsg(*newMember, __channels[i]);
 				return ;
 			}
 			else

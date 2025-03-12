@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 16:55:49 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/11 23:57:04 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Channel.hpp"
+#include <cstddef>
+#include <string>
 
 bool Server::__signal = false;
 
@@ -168,6 +171,8 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
 		topic(data, client);
     else if (!std::strncmp(data.c_str(), "INVITE ", 7))
         invite(data, *client);
+    else if (!std::strncmp(data.c_str(), "MODE ", 7))
+        mode(data, *client);
 }
 
 void Server::clearAll_Fds(int fd_client)
@@ -340,4 +345,23 @@ bool Server::check_Passowrd(std::string password)
             return false;
     }
     return true;
+}
+
+Channel *Server::getChannel(std::string name)
+{
+	for (size_t i = 0; i < __channels.size(); i++)
+	{
+		if (name == __channels[i].get_name())
+			return &__channels[i];
+	}
+	return NULL;
+}
+Client *Server::getClient(std::string name)
+{
+	for (size_t i = 0; i < __clients.size(); i++)
+	{
+		if (name == __clients[i].get_nickName())
+			return &__clients[i];
+	}
+	return NULL;
 }

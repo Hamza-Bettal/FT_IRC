@@ -26,6 +26,7 @@
 #define ERR_INCORPASS(nickname)							(": 464 " + nickname + " :Password incorrect !" + POSTFIX )
 #define ERR_BADCHANMASK(channel)					     PREFIX " 476 " + channel + " :Bad Channel Mask" POSTFIX
 #define ERR_USERONCHANNEL(channel, target)				 PREFIX "443 " + target + " " + channel + " :is already on channel" POSTFIX
+#define ERR_USERDONOTMATCH(client)						PREFIX "502 " + client + " :Cant change mode for other users" POSTFIX
 
 //Replays :
 #define RPL_WELCOME(sender, msg)               			PREFIX "001 " + sender + " : " + msg + POSTFIX 
