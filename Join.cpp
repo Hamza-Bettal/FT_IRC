@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Join.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
+/*   Updated: 2025/03/12 21:28:37 by zait-bel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "Channel.hpp"
 #include "Server.hpp"
 #include <cstddef>
@@ -39,7 +52,8 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 
 	if (channel.size() < 2)
 	{
-		//TODO: err msg
+		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user->get_fd());
+		return ;
 	}
 	std::vector<std::string> name = Server::split(channel[1], ',');
 	std::string pass;
@@ -51,7 +65,8 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 			this->leaveChannels(user);
 		if (name[i][0] != '#' || name[i][0] != '&')
 		{
-			//TODO: err msg
+			Server::send_msg(ERR_BADCHANMASK(name[i]), user->get_fd());
+			return ;
 		}
 		name[i].substr(1, name.size() - 1);
 		size_t j;

@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 23:57:04 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:23:45 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,8 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         invite(data, *client);
     else if (!std::strncmp(data.c_str(), "MODE ", 7))
         mode(data, *client);
+    else if (!std::strncmp(data.c_str(), "PRIVMSG ", 9))
+        privmsg(data, *client);
 }
 
 void Server::clearAll_Fds(int fd_client)

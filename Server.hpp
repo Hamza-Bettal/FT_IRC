@@ -6,7 +6,7 @@
 /*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/11 23:54:20 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:24:24 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ class Server
 		void							topic(std::string data, Client *user);
 		void							invite(std::string data, Client user);
 		void							mode(std::string data, Client user);
+		void							privmsg(std::string data, Client user);
         void                            leaveChannels(Client *user);
         ~Server();
 }; 
