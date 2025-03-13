@@ -6,13 +6,13 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/13 12:41:47 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
+#include "../includes/Channel.hpp"
+#include "../includes/Client.hpp"
+#include "../includes/Server.hpp"
 
 void send_channel(std::string receiver, std::string msg, Client sender, Channel *room)
 {

@@ -6,12 +6,12 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/13 12:42:12 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
-#include "Server.hpp"
+#include "../includes/Channel.hpp"
+#include "../includes/Server.hpp"
 
 void Server::topic(std::string data, Client *user)
 {

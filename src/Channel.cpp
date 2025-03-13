@@ -6,13 +6,13 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/13 12:45:32 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
+#include "../includes/Channel.hpp"
+#include "../includes/Client.hpp"
+#include "../includes/Server.hpp"
 #include <cstdio>
 #include <vector>
 

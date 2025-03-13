@@ -6,12 +6,12 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/13 13:03:51 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
-#include "Channel.hpp"
+#include "../includes/Server.hpp"
+#include "../includes/Channel.hpp"
 #include <cstddef>
 #include <string>
 
