@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/12 00:01:40 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:41:23 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void Server::invite(std::string data, Client user)
 	if (!newMember)
 		return;
 	
-	command[2].substr(1, command[2].size() - 1);
+	command[2] = command[2].substr(1, command[2].size());
 	size_t i;
 	for (i = 0; i < __channels.size(); i++)
 	{

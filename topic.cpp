@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/11 23:00:13 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:42:12 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Server::topic(std::string data, Client *user)
 		Server::send_msg(ERR_NOSUCHCHANNEL(topic[1]), user->get_fd());
 		return ;
 	}
-	topic[1].substr(1, topic[1].size() - 1);
+	topic[1] = topic[1].substr(1, topic[1].size());
 
 	Channel *room = getChannel(topic[1]);
 	if (!room)
@@ -47,6 +47,6 @@ void Server::topic(std::string data, Client *user)
 		if (topic[2].size() == 1)
 			room->set_topic("");
 		else
-			room->set_topic(topic[2].substr(2, topic[2].size() - 2));
+			room->set_topic(topic[2].substr(2, topic[2].size()));
 	}
 }

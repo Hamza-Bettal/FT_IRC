@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/12 18:23:45 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:33:01 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,10 +171,12 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
 		topic(data, client);
     else if (!std::strncmp(data.c_str(), "INVITE ", 7))
         invite(data, *client);
-    else if (!std::strncmp(data.c_str(), "MODE ", 7))
-        mode(data, *client);
+    // else if (!std::strncmp(data.c_str(), "MODE ", 7))
+    //     mode(data, *client);
     else if (!std::strncmp(data.c_str(), "PRIVMSG ", 9))
         privmsg(data, *client);
+    else if (!std::strncmp(data.c_str(), "KICK ", 5))
+        kick(data, *client);
 }
 
 void Server::clearAll_Fds(int fd_client)
@@ -353,6 +355,7 @@ Channel *Server::getChannel(std::string name)
 {
 	for (size_t i = 0; i < __channels.size(); i++)
 	{
+        std::cerr << "channel searshing :" << __channels[i].get_name() + '\n';
 		if (name == __channels[i].get_name())
 			return &__channels[i];
 	}

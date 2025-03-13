@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/12 21:23:06 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:41:47 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void Server:: privmsg(std::string data, Client user)
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user.get_fd());
 		return ;
 	}
-	std::string msg = data.substr(found, data.size() - 1);
+	std::string msg = data.substr(found, data.size());
 	if (msg.empty())
 	{
 		Server::send_msg((ERR_NOTEXTTOSEND()), user.get_fd());

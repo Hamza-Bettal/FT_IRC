@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/12 18:24:24 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 08:58:02 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ class Server
          std::vector<Client>::iterator  client_nick(std::string nick_name);
         static std::vector<std::string> split(const std::string &str, char delimiter);
         static void                     shutdown_sig(int signal);
-        static void                            send_msg(std::string msg, int fd);
+        static void                     send_msg(std::string msg, int fd);
         void                            rmoveNew_line(std::string &str);
         bool                            parce_nick(std::string nick);
         static bool                     setPort(std::string str, int &port);
@@ -96,6 +96,7 @@ class Server
         void                            join(int fd, std::string data, Client *_user);
 		void							topic(std::string data, Client *user);
 		void							invite(std::string data, Client user);
+        void                            kick(std::string data, Client user);
 		void							mode(std::string data, Client user);
 		void							privmsg(std::string data, Client user);
         void                            leaveChannels(Client *user);

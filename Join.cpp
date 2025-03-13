@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/12 21:28:37 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:40:49 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,13 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 	{
 		if (name[i][0] == '0')
 			this->leaveChannels(user);
-		if (name[i][0] != '#' || name[i][0] != '&')
+		if (name[i][0] != '#' && name[i][0] != '&')
 		{
 			Server::send_msg(ERR_BADCHANMASK(name[i]), user->get_fd());
 			return ;
 		}
-		name[i].substr(1, name.size() - 1);
+		name[i] = name[i].substr(1, name.size());
+		std::cerr << "name ==== " << name[i] + '\n';
 		size_t j;
 		for (j = 0; j < __channels.size(); j++)
 		{

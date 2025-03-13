@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/12 00:26:39 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:41:42 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void Server::mode(std::string data, Client user)
 	
 	if (command[2][0] == '#' || command[2][0] == '&')
 	{	
-		command[1].substr(1, command[1].size() - 1);
+		command[1] = command[1].substr(1, command[1].size());
 		Channel *room = getChannel(command[1]);
 		if (!room)
 		{

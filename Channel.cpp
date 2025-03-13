@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/11 22:19:53 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:45:32 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
+#include <cstdio>
 #include <vector>
 
+Channel ::Channel() : name(""){}
 Channel ::Channel(std::string name) : name(name){}
 
 std::string Channel :: get_key()
@@ -60,6 +62,20 @@ void Channel::addNewMember(Client user)
 	this->members.push_back(user);
 }
 
+void Channel::kickMember(Client user)
+{
+	std::vector<Client>::iterator it = members.begin();
+	while (it != members.end())
+	{
+		if (user.get_fd() == it->get_fd())
+		{
+			this->members.erase(it);
+			return ;
+		}
+		it++;
+	}
+}
+
 bool Channel::memberExist(Client user)
 {
 	for (size_t i = 0; i < members.size(); i++)
@@ -76,6 +92,18 @@ void Channel::sendWelcomeMsg(Client user, Channel room)
     for (size_t i = 0; i < members.size(); i++)
     {
         Server::send_msg(RPL_WELCOME(user.get_userName(), " has joind the channel"), members[i].get_fd());
+    }
+}
+
+void Channel::sendKickingMsg(Client sender, Channel room, Client target, std::string comment)
+{
+    std::vector<Client>& members = room.getMembers();
+    for (size_t i = 0; i < members.size(); i++)
+    {
+		if (comment.empty())
+        	Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName(), room.get_name(), target.get_nickName()), members[i].get_fd());
+		else
+        	Server::send_msg(RPL_KICKMSG(sender.get_nickName(), room.get_name(), target.get_nickName(), comment), members[i].get_fd());
     }
 }
 

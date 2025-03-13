@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:06:32 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/11 22:21:13 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:10:17 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Channel
 
     public:
 
+        Channel( void );
         Channel(std::string name);
 
         //getters
@@ -48,8 +49,10 @@ class Channel
 		void	set_topicMode(Client user);
 
         void		addNewMember(Client user);
+        void        kickMember(Client user);
         bool		memberExist(Client user);
 		bool		isAdmine(Client user);
         static void	sendWelcomeMsg(Client user, Channel room);
+        static void sendKickingMsg(Client sender, Channel room, Client target, std::string comment);
 };
 #endif
