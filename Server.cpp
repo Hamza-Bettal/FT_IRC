@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/13 12:33:01 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:03:51 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,6 @@ Channel *Server::getChannel(std::string name)
 {
 	for (size_t i = 0; i < __channels.size(); i++)
 	{
-        std::cerr << "channel searshing :" << __channels[i].get_name() + '\n';
 		if (name == __channels[i].get_name())
 			return &__channels[i];
 	}

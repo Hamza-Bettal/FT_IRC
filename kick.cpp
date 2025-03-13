@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:28:50 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/13 12:54:14 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/13 13:03:46 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,4 @@ void Server::kick(std::string data, Client user)
                 Channel::sendKickingMsg(user, *room, *ban, data.substr(found, data.size()));
         }
     }
-    std::cerr << "room size = " << room->getMembers().size() << '\n';
 }
