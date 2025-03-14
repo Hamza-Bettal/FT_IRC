@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 09:52:35 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 12:18:16 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void Server::topic(std::string data, Client *user)
 	}
 	if (topic[1][0] != '#' && topic[1][0] != '&')
 	{
-		Server::send_msg(ERR_NOSUCHCHANNEL(topic[1]), user->get_fd());
+		Server::send_msg(ERR_BADCHANMASK(topic[1]), user->get_fd());
 		return ;
 	}
 	topic[1] = topic[1].substr(1, topic[1].size());

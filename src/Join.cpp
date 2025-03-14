@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 10:40:05 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 12:09:12 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 void check_key(std::string pass, Client *user, Channel *room, int fd)
 {
+	std::cerr << "key == " + room->get_key() + '\n';
 	if (room->memberExist(*user))
 		return;
 	if (pass == room->get_key())
@@ -59,9 +60,9 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 		return ;
 	}
 	std::vector<std::string> name = Server::split(command[1], ',');
-	std::string pass;
+	std::vector<std::string> pass(name.size());
 	if (command.size() > 2)
-		pass = Server::split(command[2], ',')[0];
+		pass = Server::split(command[2], ',');
 	for (size_t i = 0; i < name.size(); i++)
 	{
 		if (name[i][0] != '#' && name[i][0] != '&')
@@ -96,7 +97,7 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 				Server::send_msg(ERR_CHANNELISFULL(user->get_nickName(), room->get_name()), user->get_fd());
 				continue ;
 			}
-			check_key(pass, user, room, fd);
+			check_key(pass[i], user, room, fd);
 			break ;
 		}
 	}

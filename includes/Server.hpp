@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/13 08:58:02 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 11:51:55 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ class Server
 		//getters
 
 		Channel *getChannel(std::string name);
-		Client *getClient(std::string name);
+		Client  *getClient(std::string name);
 		
         void                            Server_Launcher();
         void                            ServerSocket();

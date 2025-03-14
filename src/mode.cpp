@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 11:05:35 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 11:33:27 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Server::mode(std::string data, Client user)
 {
 	std::vector<std::string> command = Server::split(data, ' ');
 	
-	if (command[2][0] == '#' || command[2][0] == '&')
+	if (command[1][0] == '#' || command[1][0] == '&')
 	{	
 		command[1] = command[1].substr(1, command[1].size());
 		Channel *room = getChannel(command[1]);

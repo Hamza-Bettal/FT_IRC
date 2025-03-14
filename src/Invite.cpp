@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 11:00:07 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 11:44:08 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Server::invite(std::string data, Client user)
 	}
 	if (command[2][0] != '#' && command[2][0] != '&')
 	{
-		Server::send_msg(ERR_NOSUCHCHANNEL(command[2]), user.get_fd());
+		Server::send_msg(ERR_BADCHANMASK(command[2]), user.get_fd());
 		return ;
 	}
 	Client *newMember = getClient(command[1]);
@@ -39,7 +39,10 @@ void Server::invite(std::string data, Client user)
 	command[2] = command[2].substr(1, command[2].size());
 	Channel *room = getChannel(command[2]);
 	if (!room)
+	{
 		Server::send_msg(ERR_NOSUCHCHANNEL(command[2]), user.get_fd());
+		return ;
+	}
 	if (!room->memberExist(user))
 	{
 		Server::send_msg(ERR_NOTONCHANNEL(user.get_nickName(), command[2]), user.get_fd());

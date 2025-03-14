@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/14 10:18:03 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 11:50:34 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         privmsg(data, *client);
     else if (!std::strncmp(data.c_str(), "KICK ", 5))
         kick(data, *client);
-    else if (!std::strncmp(data.c_str(), "MODE ", 7))
+    else if (!std::strncmp(data.c_str(), "MODE ", 5))
         mode(data, *client);
 }
 
