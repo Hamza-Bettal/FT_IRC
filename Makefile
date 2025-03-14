@@ -9,7 +9,7 @@ all: $(NAME)
 $(NAME): $(OBJCS)
 		$(C++) $(FLAGS) -o $(NAME) $(OBJCS)
 
-%.o: %.cpp includes/Server.hpp includes/Client.hpp includes/Channel.hpp
+%.o: %.cpp includes/Server.hpp includes/Client.hpp includes/Channel.hpp includes/Replies.hpp
 	$(C++) $(FLAGS) -c $< -o $@ 
 
 clean:

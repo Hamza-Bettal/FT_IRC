@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 09:52:25 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 18:00:48 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void Server:: privmsg(std::string data, Client user)
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user.get_fd());
 		return ;
 	}
-	std::string msg = data.substr(found + 1, data.size());
+	std::string msg = data.substr(found + 2, data.size());
 	if (msg.empty())
 	{
 		Server::send_msg((ERR_NOTEXTTOSEND()), user.get_fd());

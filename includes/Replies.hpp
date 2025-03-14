@@ -45,5 +45,5 @@
 #define RPL_CHANGEMODE(hostname, channelname, mode)		        (":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
 #define RPL_UMODEIS(hostname, channelname, mode, user)	        ":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
 #define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    PREFIX ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
-#define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + target + " from " + channel + " reason :" + comment + POSTFIX
-#define RPL_KICKDEFMSG(sender, channel, target)                 ":" + sender + " KICK " + target + " from " + channel + POSTFIX
+#define RPL_KICKMSG(sender, channel, target, comment)           ": " + sender + " KICK " + target + " from " + channel + " reason :" + comment + POSTFIX
+#define RPL_KICKDEFMSG(sender, channel, target)                 ": " + sender + " KICK " + target + " from " + channel + POSTFIX

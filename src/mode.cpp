@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 11:33:27 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:33:46 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Server::mode(std::string data, Client user)
 			Server::send_msg(ERR_NOSUCHCHANNEL(command[1]), user.get_fd());
 			return;
 		}
-		if (command.size() < 3 || command[2].size() < 3 || (command[2][0] != '+' && command[2][0] != '-'))
+		if (command.size() < 3 || command[2].size() < 2 || (command[2][0] != '+' && command[2][0] != '-'))
 		{
 			Server::send_msg(RPL_CHANNELMODEIS(user.get_nickName(), room->get_name(), "+/-", "i/t/k/o/l"), user.get_fd());
 			return;
@@ -67,7 +67,7 @@ void Server::mode(std::string data, Client user)
 					room->set_limits(std::atol(command[3].c_str()));
 			}
 		}
-		if (command[2][0] == '-')
+		else if (command[2][0] == '-')
 		{
 			for (size_t i = 1; i < command.size(); i++)
 			{
@@ -87,28 +87,9 @@ void Server::mode(std::string data, Client user)
 					}
 					room->removeAdmin(*member);
 				}
-				else if (command[2][i] == 'l' && command.size() > 3 && isDigit(command[3]))
+				else if (command[2][i] == 'l')
 					room->set_limits(0);
 			}
 		}
 	}
-	// else
-	// {
-	// 	Client *member = getClient(command[1]);
-	// 	if (!member)
-	// 	{
-	// 		Server::send_msg(ERR_NOSUCHNICK(command[1]), user.get_fd());
-	// 		return;
-	// 	}
-	// 	if (member->get_nickName() != user.get_nickName())
-	// 	{
-	// 		Server::send_msg(ERR_USERDONOTMATCH(command[1]), user.get_fd());
-	// 		return;
-	// 	}
-	// 	if (command.size() < 3)
-	// 	{
-	// 		Server::send_msg(RPL_CH(), user.get_fd());
-	// 		return;
-	// 	}
-	// }
 }

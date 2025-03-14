@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 12:09:12 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 18:21:38 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@
 
 void check_key(std::string pass, Client *user, Channel *room, int fd)
 {
-	std::cerr << "key == " + room->get_key() + '\n';
 	if (room->memberExist(*user))
 		return;
 	if (pass == room->get_key())
     {
 		room->addNewMember(*user);
-        Channel::sendWelcomeMsg(*user, *room);
-		Server::send_msg(RPL_TOPIC(user->get_nickName(), room->get_name(), room->get_topic()), user->get_fd());
+		Server::send_msg(RPL_JOIN(user->get_nickName(), room->get_name()), user->get_fd());
+        // Channel::sendWelcomeMsg(*user, *room);
+		if (room->get_topic().empty())
+			Server::send_msg(RPL_NOTOPIC(user->get_nickName(), room->get_name()), user->get_fd());
+		else
+			Server::send_msg(RPL_TOPIC(user->get_nickName(), room->get_name(), room->get_topic()), user->get_fd());
     }
 	else
 		Server::send_msg(ERR_INCORPASS(user->get_nickName()), fd);
@@ -50,11 +53,11 @@ void Server::leaveChannels(Client *user)
 }
 
 
-void Server::join(int fd, std::string data, Client *user) //FIXME:
+void Server::join(int fd, std::string data, Client *user)
 {  
 	std::vector<std::string> command = Server::split(data, ' ');
 
-	if (command.size() < 2 || command[1].size() < 3)
+	if (command.size() < 2 || command[1].size() < 2)
 	{
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user->get_fd());
 		return ;
@@ -83,7 +86,8 @@ void Server::join(int fd, std::string data, Client *user) //FIXME:
 			room.set_admin(*user);
 			room.addNewMember(*user);
 			this->__channels.push_back(room);
-			Channel::sendWelcomeMsg(*user, room);
+			Server::send_msg(RPL_JOIN(user->get_nickName(), room.get_name()), user->get_fd());
+			// Channel::sendWelcomeMsg(*user, room);
 		}
 		else
 		{

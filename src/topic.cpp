@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 12:18:16 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 18:36:06 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,25 @@ void Server::topic(std::string data, Client *user)
 		return ;
 	}
 	if (topic.size() < 3)
-		Server::send_msg(RPL_TOPIC(user->get_nickName(), topic[1], room->get_topic()), user->get_fd());
+	{
+		if (room->get_topic().empty())
+			Server::send_msg(RPL_NOTOPIC(user->get_nickName(), topic[1]), user->get_fd());
+		else
+			Server::send_msg(RPL_TOPIC(user->get_nickName(), topic[1], room->get_topic()), user->get_fd());
+	}
 	else if (topic[2][0] == ':')
 	{
 		if (topic[2].size() == 1)
 			room->set_topic("");
-		else if (!room->getTopicMode())
-			room->set_topic(topic[2].substr(2, topic[2].size()));
+		else if (!room->getTopicMode() || (room->getTopicMode() && room->isAdmine(*user)))
+			room->set_topic(data.substr(data.find(':'), data.size()));
+		else
+			Server::send_msg(ERR_CHANOPRIVSNEEDED(user->get_nickName()), user->get_fd());
+	}
+	else
+	{
+		if (!room->getTopicMode() || (room->getTopicMode() && room->isAdmine(*user)))
+			room->set_topic(topic[2]);
 		else
 			Server::send_msg(ERR_CHANOPRIVSNEEDED(user->get_nickName()), user->get_fd());
 	}

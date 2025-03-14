@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/14 11:50:34 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:30:58 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,9 @@ void Server::ReceiveNewData(int fd)
     {
         std::string command = client->get_buffer().substr(0, poss);
         client->get_buffer().erase(0, poss + 1);
-        // rmoveNew_line(command);
+        rmoveNew_line(command);
         handleCommands(fd, command, client);
         std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << command << std::endl;
-    
     }
     else 
         client->get_buffer().append(" ");
@@ -177,6 +176,8 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         kick(data, *client);
     else if (!std::strncmp(data.c_str(), "MODE ", 5))
         mode(data, *client);
+    else
+        ;
 }
 
 void Server::clearAll_Fds(int fd_client)
@@ -244,7 +245,7 @@ std::vector<Client>::iterator Server::client_nick(std::string nick_name)
 
 void Server::rmoveNew_line(std::string &str)
 {
-    std::string s= str;
+    std::string s = str;
     int i = str.size() - 1;
     while(str[i] == '\n' || str[i] == '\r')
     {

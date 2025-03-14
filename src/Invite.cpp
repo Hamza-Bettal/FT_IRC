@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 11:44:08 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 16:15:04 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void Server::invite(std::string data, Client user)
 	{
 		room->addNewMember(*newMember);
 		Server::send_msg(RPL_INVITING(user.get_nickName(), newMember->get_nickName(), room->get_name()), user.get_fd());
-		Server::send_msg(RPL_WELCOME(user.get_nickName(), "invited you to the channel"), newMember->get_fd());
+		Server::send_msg(RPL_WELCOME(user.get_nickName(), "invited you to the channel " + room->get_name()), newMember->get_fd());
 		return ;
 	}
 }
