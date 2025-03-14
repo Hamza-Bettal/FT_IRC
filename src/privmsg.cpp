@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 09:52:25 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void send_channel(std::string receiver, std::string msg, Client sender, Channel 
 
 void send_user(std::string receiver, std::string msg, Client sender, Client *receiv)
 {
+
 	if (!receiv)
 	{
 		Server::send_msg(ERR_NOSUCHNICK(receiver), sender.get_fd());
@@ -53,7 +54,7 @@ void Server:: privmsg(std::string data, Client user)
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user.get_fd());
 		return ;
 	}
-	std::string msg = data.substr(found, data.size());
+	std::string msg = data.substr(found + 1, data.size());
 	if (msg.empty())
 	{
 		Server::send_msg((ERR_NOTEXTTOSEND()), user.get_fd());
@@ -64,6 +65,7 @@ void Server:: privmsg(std::string data, Client user)
 	{
 		if (receiver[i][0] == '#' || receiver[i][0] == '&')
 		{
+			receiver[i] = receiver[i].substr(1, receiver[i].size());
 			send_channel(receiver[i], msg, user, getChannel(receiver[i]));
 		}
 		else

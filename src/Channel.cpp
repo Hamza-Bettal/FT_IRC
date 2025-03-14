@@ -6,18 +6,19 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 11:01:20 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Channel.hpp"
 #include "../includes/Client.hpp"
 #include "../includes/Server.hpp"
+#include <cstddef>
 #include <cstdio>
 #include <vector>
 
-Channel ::Channel() : name(""){}
-Channel ::Channel(std::string name) : name(name){}
+Channel ::Channel() : name(""), invOnly(false), topicMode(false), limits(0){}
+Channel ::Channel(std::string name) : name(name), invOnly(false), topicMode(false), limits(0){}
 
 std::string Channel :: get_key()
 {
@@ -117,7 +118,46 @@ bool Channel::isAdmine(Client user)
 	return false;
 }
 
-bool Channel::topicModeOn()
+void Channel::removeAdmin(Client user)
 {
-	return (topicMode);
+	std::vector<Client>::iterator it = admins.begin();
+	while (it != admins.end())
+	{
+		if (user.get_fd() == it->get_fd())
+		{
+			this->admins.erase(it);
+			return ;
+		}
+		it++;
+	}
+}
+
+size_t Channel::getlimits()
+{
+	return limits;
+}
+
+bool Channel::getInvOnlyMode()
+{
+	return invOnly;
+}
+
+bool Channel::getTopicMode()
+{
+	return topicMode;
+}
+
+void Channel::set_limits(size_t num)
+{
+	limits = num;
+}
+
+void Channel::set_inviteMode(bool mode)
+{
+	invOnly = mode;
+}
+
+void Channel::set_topicMode(bool mode)
+{
+	topicMode = mode;
 }

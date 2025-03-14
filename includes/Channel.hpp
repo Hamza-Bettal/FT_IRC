@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:06:32 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/13 12:10:17 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 10:55:28 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include <cstddef>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -27,7 +28,9 @@ class Channel
         std::vector<Client>     admins;
         std::vector<Client>     members;
         std::string             topic;
+        bool                    invOnly;
 		bool					topicMode;
+        size_t                  limits;
 
     public:
 
@@ -40,16 +43,21 @@ class Channel
         std::vector<Client>		get_admins();
 		std::string				get_topic();
         std::vector<Client>&	getMembers();
-		bool 					topicModeOn();
+        size_t                  getlimits();
+		bool 					getInvOnlyMode();
+		bool 					getTopicMode();
 
         //setters
         void	set_key(std::string key);
 		void	set_topic(std::string topic);
         void	set_admin(Client user);
-		void	set_topicMode(Client user);
+        void    set_limits(size_t num);
+		void	set_inviteMode(bool mode);
+		void	set_topicMode(bool mode);
 
         void		addNewMember(Client user);
         void        kickMember(Client user);
+        void        removeAdmin(Client user);
         bool		memberExist(Client user);
 		bool		isAdmine(Client user);
         static void	sendWelcomeMsg(Client user, Channel room);

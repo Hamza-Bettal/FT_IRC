@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 09:52:35 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ void Server::topic(std::string data, Client *user)
 	{
 		if (topic[2].size() == 1)
 			room->set_topic("");
-		else
+		else if (!room->getTopicMode())
 			room->set_topic(topic[2].substr(2, topic[2].size()));
+		else
+			Server::send_msg(ERR_CHANOPRIVSNEEDED(user->get_nickName()), user->get_fd());
 	}
 }
