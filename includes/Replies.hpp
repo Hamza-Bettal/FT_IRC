@@ -25,7 +25,7 @@
 #define ERR_UNKNOWNMODE(nickname, channelname, mode)	        (std::string(": 472 ") + nickname + " " + channelname + " " + mode + " :is not a recognised channel mode" + POSTFIX)
 #define ERR_INCORPASS(nickname)							        (": 464 " + nickname + " :Password incorrect !" + POSTFIX )
 #define ERR_BADCHANMASK(channel)					            PREFIX " 476 " + channel + " :Bad Channel Mask" POSTFIX
-#define ERR_USERONCHANNEL(channel, target)			            PREFIX "443 " + target + " " + channel + " :is already on channel" POSTFIX
+#define ERR_USERONCHANNEL(target, channel)			            PREFIX "443 " + target + " " + channel + " :is already on channel" POSTFIX
 #define ERR_USERDONOTMATCH(client)                              PREFIX "502 " + client + " :Cant change mode for other users" POSTFIX
 #define ERR_CANNOTSENDTOCHAN(client, channel)		            PREFIX "404 " + client + channel + " :Cannot send to channel" POSTFIX
 
@@ -45,5 +45,5 @@
 #define RPL_CHANGEMODE(hostname, channelname, mode)		        (":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
 #define RPL_UMODEIS(hostname, channelname, mode, user)	        ":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
 #define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    PREFIX ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
-#define RPL_KICKMSG(sender, channel, target, comment)           ": " + sender + " KICK " + target + " from " + channel + " reason :" + comment + POSTFIX
-#define RPL_KICKDEFMSG(sender, channel, target)                 ": " + sender + " KICK " + target + " from " + channel + POSTFIX
+#define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + target + " from " + channel + " reason :" + comment + POSTFIX
+#define RPL_KICKDEFMSG(target, channel, sender)                 ":" + sender + " KICK " + target + " from " + channel + POSTFIX

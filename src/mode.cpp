@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 17:33:46 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 23:48:39 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,27 @@ void Server::mode(std::string data, Client user)
 	
 	if (command[1][0] == '#' || command[1][0] == '&')
 	{	
-		command[1] = command[1].substr(1, command[1].size());
+		// command[1] = command[1].substr(1, command[1].size());
+		
 		Channel *room = getChannel(command[1]);
 		if (!room)
 		{
 			Server::send_msg(ERR_NOSUCHCHANNEL(command[1]), user.get_fd());
 			return;
 		}
+		
 		if (command.size() < 3 || command[2].size() < 2 || (command[2][0] != '+' && command[2][0] != '-'))
 		{
 			Server::send_msg(RPL_CHANNELMODEIS(user.get_nickName(), room->get_name(), "+/-", "i/t/k/o/l"), user.get_fd());
 			return;
 		}
+		
 		if (!room->isAdmine(user))
 		{
 			Server::send_msg(ERR_CHANOPRIVSNEEDED(room->get_name()), user.get_fd());
 			return ;
 		}
+		
 		if (command[2][0] == '+')
 		{
 			for (size_t i = 1; i < command.size(); i++)

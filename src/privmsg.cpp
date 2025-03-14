@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 18:00:48 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 22:36:24 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Channel.hpp"
 #include "../includes/Client.hpp"
 #include "../includes/Server.hpp"
+
 
 void send_channel(std::string receiver, std::string msg, Client sender, Channel *room)
 {
@@ -30,13 +31,14 @@ void send_channel(std::string receiver, std::string msg, Client sender, Channel 
 	for(size_t i = 0; i < members.size(); i++)
 	{
 		if (sender.get_fd() != members[i].get_fd())
+		{
 			Server::send_msg(RPL_PRIVMSG(sender.get_nickName(), members[i].get_nickName(), msg), members[i].get_fd());
+		}
 	}
 }
 
 void send_user(std::string receiver, std::string msg, Client sender, Client *receiv)
 {
-
 	if (!receiv)
 	{
 		Server::send_msg(ERR_NOSUCHNICK(receiver), sender.get_fd());
@@ -49,23 +51,31 @@ void Server:: privmsg(std::string data, Client user)
 {
 	size_t found = data.find(':');
 	std::vector<std::string> command = Server::split(data, ' ');
-	if (command.size() < 3 || found == std::string::npos)
+	
+	if (command.size() < 3)
 	{  
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user.get_fd());
 		return ;
 	}
-	std::string msg = data.substr(found + 2, data.size());
+	
+	std::string msg ;
+	if (found == std::string::npos)
+		msg = command[2];
+	else
+		msg = data.substr(found + 1, data.size());
+
 	if (msg.empty())
 	{
 		Server::send_msg((ERR_NOTEXTTOSEND()), user.get_fd());
 		return ;
 	}
+
 	std::vector<std::string> receiver = Server::split(command[1], ',');
 	for (size_t i = 0; i < receiver.size(); i++)
 	{
 		if (receiver[i][0] == '#' || receiver[i][0] == '&')
 		{
-			receiver[i] = receiver[i].substr(1, receiver[i].size());
+			// receiver[i] = receiver[i].substr(0, receiver[i].size());
 			send_channel(receiver[i], msg, user, getChannel(receiver[i]));
 		}
 		else

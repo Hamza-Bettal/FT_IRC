@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 16:15:04 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 22:42:47 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_NOSUCHNICK(command[1]), user.get_fd());
 		return;
 	}
-	command[2] = command[2].substr(1, command[2].size());
+	// command[2] = command[2].substr(1, command[2].size() - 1);
 	Channel *room = getChannel(command[2]);
 	if (!room)
 	{

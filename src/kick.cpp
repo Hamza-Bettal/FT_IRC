@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:28:50 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 09:52:23 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 22:42:38 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Server::kick(std::string data, Client user)
         Server::send_msg(ERR_BADCHANMASK(command[1]), user.get_fd());
 		return ;
     }
-    command[1] = command[1].substr(1, command[1].size());
+    // command[1] = command[1].substr(1, command[1].size() - 1);
     Channel *room = getChannel(command[1]);
     if (!room)
     {

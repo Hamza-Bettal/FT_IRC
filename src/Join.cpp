@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 18:21:38 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 23:09:40 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,14 @@ void Server::join(int fd, std::string data, Client *user)
 		pass = Server::split(command[2], ',');
 	for (size_t i = 0; i < name.size(); i++)
 	{
+		std::cout << "--> :" << name[i] << std::endl;
 		if (name[i][0] != '#' && name[i][0] != '&')
 		{
 			Server::send_msg(ERR_BADCHANMASK(name[i]), user->get_fd());
 			return ;
 		}
-		name[i] = name[i].substr(1, name.size());
-		if (name[i] == "0")
+		// name[i] = name[i].substr(0, name[i].size() - 1);
+		if (name[i] == "#0")
 		{
 			this->leaveChannels(user);
 			continue ;
@@ -86,6 +87,7 @@ void Server::join(int fd, std::string data, Client *user)
 			room.set_admin(*user);
 			room.addNewMember(*user);
 			this->__channels.push_back(room);
+			std::cout << "channel name : " << room.get_name() << "\n";
 			Server::send_msg(RPL_JOIN(user->get_nickName(), room.get_name()), user->get_fd());
 			// Channel::sendWelcomeMsg(*user, room);
 		}

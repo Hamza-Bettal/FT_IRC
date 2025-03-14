@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 18:36:06 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/14 22:44:21 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Channel.hpp"
 #include "../includes/Server.hpp"
+
+
 
 void Server::topic(std::string data, Client *user)
 {
@@ -26,7 +28,7 @@ void Server::topic(std::string data, Client *user)
 		Server::send_msg(ERR_BADCHANMASK(topic[1]), user->get_fd());
 		return ;
 	}
-	topic[1] = topic[1].substr(1, topic[1].size());
+	// topic[1] = topic[1].substr(1, topic[1].size() - 1);
 
 	Channel *room = getChannel(topic[1]);
 	if (!room)
@@ -52,7 +54,7 @@ void Server::topic(std::string data, Client *user)
 		if (topic[2].size() == 1)
 			room->set_topic("");
 		else if (!room->getTopicMode() || (room->getTopicMode() && room->isAdmine(*user)))
-			room->set_topic(data.substr(data.find(':'), data.size()));
+			room->set_topic(data.substr(data.find(':') + 1));
 		else
 			Server::send_msg(ERR_CHANOPRIVSNEEDED(user->get_nickName()), user->get_fd());
 	}
