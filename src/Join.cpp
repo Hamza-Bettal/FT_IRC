@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 23:09:40 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 09:40:51 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,17 @@ void check_key(std::string pass, Client *user, Channel *room, int fd)
 	if (pass == room->get_key())
     {
 		room->addNewMember(*user);
+		Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
+		Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), room->get_name()), user->get_fd());
 		Server::send_msg(RPL_JOIN(user->get_nickName(), room->get_name()), user->get_fd());
-        // Channel::sendWelcomeMsg(*user, *room);
+        Channel::sendWelcomeMsg(*user, *room);
 		if (room->get_topic().empty())
 			Server::send_msg(RPL_NOTOPIC(user->get_nickName(), room->get_name()), user->get_fd());
 		else
 			Server::send_msg(RPL_TOPIC(user->get_nickName(), room->get_name(), room->get_topic()), user->get_fd());
     }
 	else
-		Server::send_msg(ERR_INCORPASS(user->get_nickName()), fd);
+		Server::send_msg(ERR_BADCHANNELKEY(user->get_nickName(), room->get_name()), fd);
 }
 
 void Server::leaveChannels(Client *user)
@@ -68,8 +70,7 @@ void Server::join(int fd, std::string data, Client *user)
 		pass = Server::split(command[2], ',');
 	for (size_t i = 0; i < name.size(); i++)
 	{
-		std::cout << "--> :" << name[i] << std::endl;
-		if (name[i][0] != '#' && name[i][0] != '&')
+		if (name[i][0] != '#')
 		{
 			Server::send_msg(ERR_BADCHANMASK(name[i]), user->get_fd());
 			return ;
@@ -87,9 +88,7 @@ void Server::join(int fd, std::string data, Client *user)
 			room.set_admin(*user);
 			room.addNewMember(*user);
 			this->__channels.push_back(room);
-			std::cout << "channel name : " << room.get_name() << "\n";
 			Server::send_msg(RPL_JOIN(user->get_nickName(), room.get_name()), user->get_fd());
-			// Channel::sendWelcomeMsg(*user, room);
 		}
 		else
 		{

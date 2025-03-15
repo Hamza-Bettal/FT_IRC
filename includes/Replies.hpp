@@ -22,9 +22,10 @@
 #define ERR_INVITEONLYCHAN(client, channel)				        PREFIX " 473 " + client + " " + channel + " :Cannot join channel (+i)" POSTFIX
 #define ERR_NEEDMODEPARM(channelname, mode)				        (std::string(": 696 ") + channelname + " * You must specify a parameter for the key mode. " + mode + POSTFIX)
 #define ERR_INVALIDMODEPARM(channelname, mode)			        (std::string(": 696 ") + channelname + " Invalid mode parameter. " + mode + POSTFIX)
-#define ERR_UNKNOWNMODE(nickname, channelname, mode)	        (std::string(": 472 ") + nickname + " " + channelname + " " + mode + " :is not a recognised channel mode" + POSTFIX)
+#define ERR_UNKNOWNMODE(nickname, channelname, mode)	        (std::string(": 472 ") + nickname + " " + channelname + " " + mode + " :is not a recognised channel mode" POSTFIX)
 #define ERR_INCORPASS(nickname)							        (": 464 " + nickname + " :Password incorrect !" + POSTFIX )
-#define ERR_BADCHANMASK(channel)					            PREFIX " 476 " + channel + " :Bad Channel Mask" POSTFIX
+#define ERR_BADCHANNELKEY(client, channel)					    PREFIX "476 " + client + " " + channel + " :Cannot join channel (+k)" POSTFIX
+#define ERR_BADCHANMASK(channel)					            PREFIX "475 " + channel + " :Bad Channel Mask" POSTFIX
 #define ERR_USERONCHANNEL(target, channel)			            PREFIX "443 " + target + " " + channel + " :is already on channel" POSTFIX
 #define ERR_USERDONOTMATCH(client)                              PREFIX "502 " + client + " :Cant change mode for other users" POSTFIX
 #define ERR_CANNOTSENDTOCHAN(client, channel)		            PREFIX "404 " + client + channel + " :Cannot send to channel" POSTFIX
@@ -32,11 +33,11 @@
 //Replays :
 #define RPL_WELCOME(sender, msg)               			        PREFIX "001 " + sender + " : " + msg + POSTFIX 
 #define RPL_NAMREPLY(sender, channel, users)    		        PREFIX "353 " + sender + " = " + channel + " :" + users + POSTFIX
-#define RPL_ENDOFNAMES(sender, channel)        			        PREFIX "366 " + sender + " " + channel + " :End of /NAMES list." POSTFIX
-#define RPL_TOPIC(sender, channel, topic)				        PREFIX " 332 " + sender + " " + channel + " :" + topic + POSTFIX    
+#define RPL_ENDOFNAMES(sender, channel)        			        PREFIX "366 " + sender + " " + channel + " :End of /NAMES list" POSTFIX
+#define RPL_TOPIC(sender, channel, topic)				        PREFIX "332 " + sender + " " + channel + " :" + topic + POSTFIX    
 #define RPL_PRIVMSG(sender, target, msg)				        ":" + sender + " PRIVMSG " + target + " :" + msg + POSTFIX 
 #define RPL_NICK(sender, nick)							        ":" + sender + " NICK " + nick + POSTFIX
-#define RPL_NOTOPIC(sender, channel)					        PREFIX " 331 " + sender + " " + channel + " :No topic is set" + POSTFIX
+#define RPL_NOTOPIC(sender, channel)					        PREFIX " 331 " + sender + " " + channel + " :No topic is set" POSTFIX
 #define RPL_INVITING(nickname, targnick, targchan)  	        ": 341 " + nickname + " " + targnick + " " + targchan + POSTFIX
 #define RPL_INVITE(sender, target, channel)				        ":" + sender + " INVITE " + target + " " + channel + POSTFIX
 #define RPL_INVITING(nickname, targnick, targchan) 	 	        ": 341 " + nickname + " " + targnick + " " + targchan + POSTFIX
@@ -44,6 +45,6 @@
 #define RPL_JOIN(sender, channel)						        ":" + sender + " JOIN :" + channel + POSTFIX
 #define RPL_CHANGEMODE(hostname, channelname, mode)		        (":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
 #define RPL_UMODEIS(hostname, channelname, mode, user)	        ":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
-#define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    PREFIX ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
-#define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + target + " from " + channel + " reason :" + comment + POSTFIX
-#define RPL_KICKDEFMSG(target, channel, sender)                 ":" + sender + " KICK " + target + " from " + channel + POSTFIX
+#define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
+#define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + channel + " " + target + " :" + comment + POSTFIX
+#define RPL_KICKDEFMSG(target, channel, sender)                 ":" + sender + " KICK " + channel + " " + target + POSTFIX

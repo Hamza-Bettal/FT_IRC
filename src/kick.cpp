@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:28:50 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 22:42:38 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 07:24:27 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Server::kick(std::string data, Client user)
 		return ;
 	}
     size_t  found = data.find(':');
-    if (command[1][0] != '#' && command[1][0] != '&')
+    if (command[1][0] != '#')
     {
         Server::send_msg(ERR_BADCHANMASK(command[1]), user.get_fd());
 		return ;
@@ -60,10 +60,12 @@ void Server::kick(std::string data, Client user)
         else
         {
             room->kickMember(*ban);
-            if (found == std::string::npos)
-                Channel::sendKickingMsg(user, *room, *ban, "");
+            if (found == std::string::npos && command.size() > 3)
+                Channel::sendKickingMsg(user, *room, *ban, command[3]);
+            else if (found != std::string::npos)
+                Channel::sendKickingMsg(user, *room, *ban, data.substr(found + 2, data.size()));
             else
-                Channel::sendKickingMsg(user, *room, *ban, data.substr(found, data.size()));
+                Channel::sendKickingMsg(user, *room, *ban, "");
         }
     }
 }

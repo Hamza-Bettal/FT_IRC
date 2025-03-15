@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 22:36:24 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 08:26:25 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,12 @@ void Server:: privmsg(std::string data, Client user)
 	std::vector<std::string> receiver = Server::split(command[1], ',');
 	for (size_t i = 0; i < receiver.size(); i++)
 	{
-		if (receiver[i][0] == '#' || receiver[i][0] == '&')
+		if (receiver[i][0] == '#')
 		{
 			// receiver[i] = receiver[i].substr(0, receiver[i].size());
 			send_channel(receiver[i], msg, user, getChannel(receiver[i]));
 		}
 		else
-		{
 			send_user(receiver[i], msg, user, getClient(receiver[i]));
-		}
 	}
 }

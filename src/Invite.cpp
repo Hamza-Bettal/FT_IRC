@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 22:42:47 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 08:33:30 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_NEEDMOREPARAMS(data), user.get_fd());
 		return ;
 	}
-	if (command[2][0] != '#' && command[2][0] != '&')
+	if (command[2][0] != '#')
 	{
 		Server::send_msg(ERR_BADCHANMASK(command[2]), user.get_fd());
 		return ;

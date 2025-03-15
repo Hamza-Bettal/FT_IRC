@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 22:44:21 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 06:31:40 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void Server::topic(std::string data, Client *user)
 		Server::send_msg((ERR_NEEDMOREPARAMS(data)), user->get_fd());
 		return ;
 	}
-	if (topic[1][0] != '#' && topic[1][0] != '&')
+	if (topic[1][0] != '#')
 	{
 		Server::send_msg(ERR_BADCHANMASK(topic[1]), user->get_fd());
 		return ;

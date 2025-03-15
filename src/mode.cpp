@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/14 23:48:39 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 06:31:30 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Server::mode(std::string data, Client user)
 {
 	std::vector<std::string> command = Server::split(data, ' ');
 	
-	if (command[1][0] == '#' || command[1][0] == '&')
+	if (command[1][0] == '#')
 	{	
 		// command[1] = command[1].substr(1, command[1].size());
 		

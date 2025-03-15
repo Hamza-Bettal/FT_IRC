@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:06:32 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/14 15:58:08 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 08:47:30 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Channel
         void        removeAdmin(Client user);
         bool		memberExist(Client user);
 		bool		isAdmine(Client user);
+        std::string nameReply();
         static void	sendWelcomeMsg(Client user, Channel room);
         static void sendKickingMsg(Client sender, Channel room, Client target, std::string comment);
 };

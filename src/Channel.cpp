@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/14 18:28:16 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 09:40:27 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ void Channel::sendKickingMsg(Client sender, Channel room, Client target, std::st
     for (size_t i = 0; i < members.size(); i++)
     {
 		if (comment.empty())
-        	Server::send_msg(RPL_KICKDEFMSG(target.get_nickName(), room.get_name(), sender.get_nickName()), members[i].get_fd());
+        	Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName(), room.get_name(), target.get_nickName()), members[i].get_fd());
 		else
-        	Server::send_msg(RPL_KICKMSG(target.get_nickName(), room.get_name(), sender.get_nickName(), comment), members[i].get_fd());
+        	Server::send_msg(RPL_KICKMSG(sender.get_nickName(), room.get_name(), target.get_nickName(), comment), members[i].get_fd());
     }
 }
 
@@ -130,6 +130,18 @@ void Channel::removeAdmin(Client user)
 		}
 		it++;
 	}
+}
+
+std::string Channel::nameReply()
+{
+	std::string reply;
+	for (size_t i = 0; i < members.size(); i++)
+	{
+		reply += members[i].get_nickName();
+		if (i + 1 < members.size())
+			reply += ' ';
+	}
+	return reply;
 }
 
 size_t Channel::getlimits()
