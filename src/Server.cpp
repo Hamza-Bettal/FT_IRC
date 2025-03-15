@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/15 21:11:57 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 23:18:49 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void Server::ServerSocket()
     if (fcntl(__fd_socket, F_SETFL, O_NONBLOCK) < 0)
         throw std::runtime_error("Error: fcntl failed");
     struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(__port);
@@ -57,6 +58,7 @@ void Server::ServerSocket()
     if (listen(__fd_socket, 42) < 0)
         throw std::runtime_error("Error: listen failed");
     struct pollfd pfd;
+    memset(&pfd, 0, sizeof(pfd));
     std::cout << gold"Server is running on port " pos << __port << std::endl;
     std::cout << color "Server is waiting for connections" pos << std::endl;
     pfd.fd = __fd_socket;
@@ -135,9 +137,6 @@ void Server::ReceiveNewData(int fd)
     }
     if (client == NULL)
         return ;
-    // append the buffer to the client buffer
-    // check if client buffer had new line
-        // if yes execute it
     client->get_buffer().append(buff);
     size_t poss;
     if ((poss = client->get_buffer().find('\n')) != std::string::npos)
@@ -314,7 +313,10 @@ void Server::passWord(int fd, std::string data)
     std::vector<Client>::iterator it = get_client(fd);
     rmoveNew_line(pass);
     if (pass == __passWord)
+    {
         it->set_hasPass(true);
+        it->set_IpAdd(getclient_IPadd(fd));
+    }
     else
         send_msg(ERR_PASSWDMISMATCH(it->get_nickName()), fd);
 
@@ -373,4 +375,17 @@ Client *Server::getClient(std::string name)
 			return &__clients[i];
 	}
 	return NULL;
+}
+
+std::string Server::getclient_IPadd(int fd)
+{
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    char client_IPadd[INET_ADDRSTRLEN];
+
+    if (getpeername(fd, (struct sockaddr *)&client_addr, &client_len) == -1)
+		throw std::runtime_error("ERROR: getpeername failed");
+    if (inet_ntop(AF_INET, &client_addr.sin_addr, client_IPadd, sizeof(client_IPadd)) == NULL)
+		throw std::runtime_error("ERROR: inet_ntop failed");
+    return std::string(client_IPadd);
 }

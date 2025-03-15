@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/15 21:02:48 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/15 23:11:30 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ class Server
         static bool                     setPort(std::string str, int &port);
         static bool                     check_Passowrd(std::string password);
         void                            handleCommands(int fd, std::string &data, Client *client);
+        std::string                     getclient_IPadd(int fd);
 
         //channel
 
