@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 09:40:51 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 18:04:00 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,8 @@ void check_key(std::string pass, Client *user, Channel *room, int fd)
 		return;
 	if (pass == room->get_key())
     {
-		room->addNewMember(*user);
-		Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
-		Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), room->get_name()), user->get_fd());
 		Server::send_msg(RPL_JOIN(user->get_nickName(), room->get_name()), user->get_fd());
+		room->addNewMember(*user);
         Channel::sendWelcomeMsg(*user, *room);
 		if (room->get_topic().empty())
 			Server::send_msg(RPL_NOTOPIC(user->get_nickName(), room->get_name()), user->get_fd());
@@ -53,7 +51,6 @@ void Server::leaveChannels(Client *user)
         }
     }
 }
-
 
 void Server::join(int fd, std::string data, Client *user)
 {  
@@ -89,6 +86,7 @@ void Server::join(int fd, std::string data, Client *user)
 			room.addNewMember(*user);
 			this->__channels.push_back(room);
 			Server::send_msg(RPL_JOIN(user->get_nickName(), room.get_name()), user->get_fd());
+			Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room.get_name(), room.nameReply()), user->get_fd());
 		}
 		else
 		{
@@ -103,7 +101,8 @@ void Server::join(int fd, std::string data, Client *user)
 				continue ;
 			}
 			check_key(pass[i], user, room, fd);
-			break ;
+			Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
 		}
+		Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), name[i]), user->get_fd());
 	}
 }

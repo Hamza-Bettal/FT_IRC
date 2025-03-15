@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/14 17:30:58 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 16:08:57 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void Server::ServerSocket()
 {
     int opt = 1;
 
-    __fd_socket = socket(AF_INET, SOCK_STREAM, 0);
+    __fd_socket = socket(PF_INET, SOCK_STREAM, 0);
     if (__fd_socket == -1)
         throw std::runtime_error("Error: socket failed");
     if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)//allow a server to reuse a recently closed port without waiting for it to be released by the operating system
@@ -122,7 +122,8 @@ void Server::ReceiveNewData(int fd)
         clearAll_Fds(fd);
         return ;
     }
-    buff[num_bytes] = '\0';
+    if (num_bytes != std::string::npos)
+        buff[num_bytes] = '\0';
     for (size_t i = 0; i < __clients.size(); i++)
     {
         if (__clients[i].get_fd() == fd)
@@ -177,7 +178,7 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
     else if (!std::strncmp(data.c_str(), "MODE ", 5))
         mode(data, *client);
     else
-        ;
+        Server::send_msg(ERR_UNKNOWNCOMMAND(client->get_nickName(), data), client->get_fd());
 }
 
 void Server::clearAll_Fds(int fd_client)

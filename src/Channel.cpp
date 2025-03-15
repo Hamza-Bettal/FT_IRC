@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/15 09:40:27 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 17:53:03 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../includes/Server.hpp"
 #include <cstddef>
 #include <cstdio>
+#include <iterator>
 #include <vector>
 
 Channel ::Channel() : name(""), invOnly(false), topicMode(false), limits(0){}
@@ -92,7 +93,7 @@ void Channel::sendWelcomeMsg(Client user, Channel room)
     std::vector<Client>& members = room.getMembers();
     for (size_t i = 0; i < members.size(); i++)
     {
-        Server::send_msg(RPL_WELCOME(user.get_nickName(), " has joind the channel"), members[i].get_fd());
+        Server::send_msg(RPL_JOINMSG(user.get_nickName() + '!' + user.get_userName(), user.get_IpAdd(), room.get_name()), members[i].get_fd());
     }
 }
 
@@ -102,9 +103,9 @@ void Channel::sendKickingMsg(Client sender, Channel room, Client target, std::st
     for (size_t i = 0; i < members.size(); i++)
     {
 		if (comment.empty())
-        	Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName(), room.get_name(), target.get_nickName()), members[i].get_fd());
+			Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), members[i].get_fd());
 		else
-        	Server::send_msg(RPL_KICKMSG(sender.get_nickName(), room.get_name(), target.get_nickName(), comment), members[i].get_fd());
+			Server::send_msg(RPL_KICKMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName(), comment), members[i].get_fd());
     }
 }
 
@@ -137,6 +138,8 @@ std::string Channel::nameReply()
 	std::string reply;
 	for (size_t i = 0; i < members.size(); i++)
 	{
+		if (isAdmine(members[i]))
+			reply += '@';
 		reply += members[i].get_nickName();
 		if (i + 1 < members.size())
 			reply += ' ';

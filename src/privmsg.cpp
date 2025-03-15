@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 08:26:25 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 13:53:24 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void send_channel(std::string receiver, std::string msg, Client sender, Channel 
 	{
 		if (sender.get_fd() != members[i].get_fd())
 		{
-			Server::send_msg(RPL_PRIVMSG(sender.get_nickName(), members[i].get_nickName(), msg), members[i].get_fd());
+			Server::send_msg(RPL_PRIVMSG(sender.get_nickName(), receiver, msg), members[i].get_fd());
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:28:50 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 07:24:27 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 17:15:06 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,12 @@ void Server::kick(std::string data, Client user)
         }
         else
         {
+            std::cerr << "afhaohofsas\n";
             room->kickMember(*ban);
             if (found == std::string::npos && command.size() > 3)
                 Channel::sendKickingMsg(user, *room, *ban, command[3]);
-            else if (found != std::string::npos)
-                Channel::sendKickingMsg(user, *room, *ban, data.substr(found + 2, data.size()));
+            else if (found != std::string::npos && command[3].size() > 1)
+                Channel::sendKickingMsg(user, *room, *ban, data.substr(found + 1, data.size()));
             else
                 Channel::sendKickingMsg(user, *room, *ban, "");
         }
