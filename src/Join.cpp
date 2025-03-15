@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 18:04:00 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 18:08:11 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void Server::leaveChannels(Client *user)
             }
             it++;
         }
+		Server::send_msg(RPL_PART(user->get_nickName(), __channels[i].get_name(), ""), user->get_fd());
     }
 }
 
