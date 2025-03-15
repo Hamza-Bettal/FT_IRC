@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:28:50 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 18:41:27 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 20:25:05 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void Server::kick(std::string data, Client user)
             if (found == std::string::npos && command.size() > 3)
                 Channel::sendKickingMsg(user, *room, *ban, command[3]);
             else if (found != std::string::npos && command[3].size() > 1)
-                Channel::sendKickingMsg(user, *room, *ban, data.substr(found + 1, data.size()));
+                Channel::sendKickingMsg(user, *room, *ban, data.substr(found + 1));
             else
                 Channel::sendKickingMsg(user, *room, *ban, "");
         }

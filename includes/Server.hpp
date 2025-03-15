@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/14 11:51:55 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 21:02:48 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ class Server
 		void							mode(std::string data, Client user);
 		void							privmsg(std::string data, Client user);
         void                            leaveChannels(Client *user);
+		void							part(std::string data, Client client);
         ~Server();
 }; 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 08:33:30 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 21:36:22 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_NOSUCHNICK(command[1]), user.get_fd());
 		return;
 	}
-	// command[2] = command[2].substr(1, command[2].size() - 1);
 	Channel *room = getChannel(command[2]);
 	if (!room)
 	{
@@ -63,11 +62,8 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_CHANNELISFULL(user.get_nickName(), command[1]), user.get_fd());
 		return ;
 	}
-	else
-	{
-		room->addNewMember(*newMember);
-		Server::send_msg(RPL_INVITING(user.get_nickName(), newMember->get_nickName(), room->get_name()), user.get_fd());
-		Server::send_msg(RPL_WELCOME(user.get_nickName(), "invited you to the channel " + room->get_name()), newMember->get_fd());
-		return ;
-	}
+
+	room->addNewMember(*newMember);
+	Server::send_msg(RPL_INVITING(user.get_nickName(), newMember->get_nickName(), room->get_name()), user.get_fd());
+	Server::send_msg(RPL_INVITE(user.get_nickName(), newMember->get_nickName(), room->get_name()), newMember->get_fd());
 }

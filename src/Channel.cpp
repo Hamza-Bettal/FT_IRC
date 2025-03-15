@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/15 17:53:03 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 20:42:44 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,15 @@ void Channel::sendKickingMsg(Client sender, Channel room, Client target, std::st
     std::vector<Client>& members = room.getMembers();
     for (size_t i = 0; i < members.size(); i++)
     {
-		if (comment.empty())
-			Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), members[i].get_fd());
-		else
-			Server::send_msg(RPL_KICKMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName(), comment), members[i].get_fd());
+		if (target.get_fd() != members[i].get_fd())
+		{
+			if (comment.empty())
+				Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), members[i].get_fd());
+			else
+				Server::send_msg(RPL_KICKMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName(), comment), members[i].get_fd());
+			
+		}
+		Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), target.get_fd());
     }
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/15 18:35:29 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 21:11:57 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,18 +179,7 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
     else if (!std::strncmp(data.c_str(), "MODE ", 5))
         mode(data, *client);
     else if (!std::strncmp(data.c_str(), "PART ", 5))
-    {
-        std::vector<std::string> cmd = Server::split(data, ' ');
-        if (cmd.size() == 3 && cmd[2] == "Leaving...")
-        {
-            Channel *room = getChannel(cmd[1]);
-            if (room)
-            {
-                room->kickMember(*client);
-                Server::send_msg(RPL_PART(client->get_nickName(), room->get_name(), cmd[2]), client->get_fd());
-            }
-        }
-    }
+		part(data, *client);
     else
         Server::send_msg(ERR_UNKNOWNCOMMAND(client->get_nickName(), data), client->get_fd());
 }

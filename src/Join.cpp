@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 18:08:11 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/15 22:03:35 by zait-bel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,34 @@ void check_key(std::string pass, Client *user, Channel *room, int fd)
     }
 	else
 		Server::send_msg(ERR_BADCHANNELKEY(user->get_nickName(), room->get_name()), fd);
+	Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
+	Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), room->get_name()), user->get_fd());
 }
 
+void Server::part(std::string data, Client client)
+{
+	std::vector<std::string> cmd = Server::split(data, ' ');
+	if (cmd.size() == 3 && cmd[2] == "Leaving...")
+	{
+		Channel *room = getChannel(cmd[1]);
+		if (room)
+		{
+			std::vector<Client>& members = room->getMembers();
+			std::vector<Client>::iterator it = members.begin();
+			while (it != members.end())
+			{
+				if (client.get_fd() == it->get_fd())
+				{
+					it = members.erase(it);
+					break;
+				}
+				Server::send_msg(RPL_PART(client.get_nickName(),room->get_name(), ""), it->get_fd());
+				it++;
+			}
+			Server::send_msg(RPL_PART(client.get_nickName(), room->get_name(), cmd[2]), client.get_fd());
+		}
+	}
+}
 void Server::leaveChannels(Client *user)
 {
     for (size_t i = 0; i < this->__channels.size(); i++)
@@ -47,6 +73,7 @@ void Server::leaveChannels(Client *user)
                 it = members.erase(it);
                 break;
             }
+			Server::send_msg(RPL_PART(user->get_nickName(), __channels[i].get_name(), ""), it->get_fd());
             it++;
         }
 		Server::send_msg(RPL_PART(user->get_nickName(), __channels[i].get_name(), ""), user->get_fd());
@@ -88,6 +115,7 @@ void Server::join(int fd, std::string data, Client *user)
 			this->__channels.push_back(room);
 			Server::send_msg(RPL_JOIN(user->get_nickName(), room.get_name()), user->get_fd());
 			Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room.get_name(), room.nameReply()), user->get_fd());
+			Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), name[i]), user->get_fd());
 		}
 		else
 		{
@@ -102,8 +130,6 @@ void Server::join(int fd, std::string data, Client *user)
 				continue ;
 			}
 			check_key(pass[i], user, room, fd);
-			Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
 		}
-		Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), name[i]), user->get_fd());
 	}
 }
