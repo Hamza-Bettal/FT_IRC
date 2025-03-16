@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 06:31:40 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/16 09:52:25 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void Server::topic(std::string data, Client *user)
 		Server::send_msg(ERR_BADCHANMASK(topic[1]), user->get_fd());
 		return ;
 	}
-	// topic[1] = topic[1].substr(1, topic[1].size() - 1);
-
 	Channel *room = getChannel(topic[1]);
 	if (!room)
 	{

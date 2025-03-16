@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:06:32 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/15 08:47:30 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/16 09:11:15 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Channel
         std::string             name;
         std::vector<Client>     admins;
         std::vector<Client>     members;
+        std::vector<Client>     invited;
         std::string             topic;
         bool                    invOnly;
 		bool					topicMode;
@@ -56,12 +57,15 @@ class Channel
 		void	set_topicMode(bool mode);
 
         void		addNewMember(Client user);
+        void        inviteClient(Client user);
         void        kickMember(Client user);
         void        removeAdmin(Client user);
         bool		memberExist(Client user);
 		bool		isAdmine(Client user);
+		bool		isInvited(Client user);
         std::string nameReply();
         static void	sendWelcomeMsg(Client user, Channel room);
+        static void sendModeMsg(Client user, Channel room, std::string mode, std::string param);
         static void sendKickingMsg(Client sender, Channel room, Client target, std::string comment);
 };
 #endif

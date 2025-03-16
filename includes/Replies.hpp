@@ -29,6 +29,7 @@
 #define ERR_USERONCHANNEL(target, channel)			            PREFIX "443 " + target + " " + channel + " :is already on channel" POSTFIX
 #define ERR_USERDONOTMATCH(client)                              PREFIX "502 " + client + " :Cant change mode for other users" POSTFIX
 #define ERR_CANNOTSENDTOCHAN(client, channel)		            PREFIX "404 " + client + channel + " :Cannot send to channel" POSTFIX
+#define ERR_UMODEUNKNOWNFLAG(client)		                    PREFIX "501 " + client + " :Unknown MODE flag" POSTFIX
 
 //Replays :
 #define RPL_WELCOME(sender, msg)               			        PREFIX "001 " + sender + " : " + msg + POSTFIX 
@@ -43,7 +44,7 @@
 #define RPL_JOINMSG(hostname, ipaddress, channelname)	        (":" + hostname + "@" + ipaddress + " JOIN " + channelname + POSTFIX)
 #define RPL_JOIN(sender, channel)						        ":" + sender + " JOIN :" + channel + POSTFIX
 #define RPL_PART(sender, channel, reason)                       ":" + sender + " PART " + channel + " :" + reason + POSTFIX
-#define RPL_CHANGEMODE(hostname, channelname, mode)		        (":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
+#define RPL_CHANGEMODE(hostname, channelname, mode)		(":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
 #define RPL_UMODEIS(hostname, channelname, mode, user)	        ":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
 #define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
 #define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + channel + " " + target + " :" + comment + POSTFIX

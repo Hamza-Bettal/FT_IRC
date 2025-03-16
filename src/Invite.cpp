@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 23:08:41 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 21:36:22 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/16 08:54:31 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ void Server::invite(std::string data, Client user)
 		Server::send_msg(ERR_NOTONCHANNEL(user.get_nickName(), command[2]), user.get_fd());
 		return ;
 	}
-	if (room->getTopicMode() && !room->isAdmine(user))
-	{
-		Server::send_msg(ERR_CHANOPRIVSNEEDED(command[2]), user.get_fd());
-		return ;
-	}
 	if (room->memberExist(*newMember))
 	{
 		Server::send_msg(ERR_USERONCHANNEL(command[2], command[1]), user.get_fd());
+		return ;
+	}
+	if (room->getInvOnlyMode() && !room->isAdmine(user))
+	{
+		Server::send_msg(ERR_CHANOPRIVSNEEDED(command[2]), user.get_fd());
 		return ;
 	}
 	if (room->getlimits() && room->getMembers().size() + 1 > room->getlimits())
@@ -63,7 +63,7 @@ void Server::invite(std::string data, Client user)
 		return ;
 	}
 
-	room->addNewMember(*newMember);
+	room->inviteClient(*newMember);
 	Server::send_msg(RPL_INVITING(user.get_nickName(), newMember->get_nickName(), room->get_name()), user.get_fd());
 	Server::send_msg(RPL_INVITE(user.get_nickName(), newMember->get_nickName(), room->get_name()), newMember->get_fd());
 }

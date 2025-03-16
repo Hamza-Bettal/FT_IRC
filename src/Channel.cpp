@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/15 20:42:44 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/16 09:20:23 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <iterator>
+#include <string>
 #include <vector>
 
 Channel ::Channel() : name(""), invOnly(false), topicMode(false), limits(0){}
@@ -97,21 +98,26 @@ void Channel::sendWelcomeMsg(Client user, Channel room)
     }
 }
 
+void Channel::sendModeMsg(Client user, Channel room, std::string mode, std::string param)
+{
+    std::vector<Client> members = room.getMembers();
+	if (!param.empty())
+		mode = mode + ' ' + param;
+    for (size_t i = 0; i < members.size(); i++)
+    {
+        Server::send_msg(RPL_CHANGEMODE(user.get_nickName(), room.get_name(), mode), members[i].get_fd());
+    }
+}
+
 void Channel::sendKickingMsg(Client sender, Channel room, Client target, std::string comment)
 {
     std::vector<Client>& members = room.getMembers();
     for (size_t i = 0; i < members.size(); i++)
     {
 		if (target.get_fd() != members[i].get_fd())
-		{
-			if (comment.empty())
-				Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), members[i].get_fd());
-			else
-				Server::send_msg(RPL_KICKMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName(), comment), members[i].get_fd());
-			
-		}
-		Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@localhost", room.get_name(), target.get_nickName()), target.get_fd());
+			Server::send_msg(RPL_KICKMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@" + sender.get_IpAdd(), room.get_name(), target.get_nickName(), comment), members[i].get_fd());
     }
+	Server::send_msg(RPL_KICKDEFMSG(sender.get_nickName() + "!~" + sender.get_userName() + "@" + sender.get_IpAdd(), room.get_name(), target.get_nickName()), target.get_fd());
 }
 
 bool Channel::isAdmine(Client user)
@@ -150,6 +156,21 @@ std::string Channel::nameReply()
 			reply += ' ';
 	}
 	return reply;
+}
+
+bool Channel::isInvited(Client user)
+{
+	for (size_t i = 0; i < invited.size(); i++)
+	{
+		if (user.get_fd() == invited[i].get_fd())
+			return true;
+	}
+	return false;
+}
+
+void Channel::inviteClient(Client user)
+{
+	invited.push_back(user);
 }
 
 size_t Channel::getlimits()

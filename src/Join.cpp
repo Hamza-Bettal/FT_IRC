@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zait-bel <zait-bel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/15 22:03:35 by zait-bel         ###   ########.fr       */
+/*   Updated: 2025/03/16 09:53:10 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ void Server::join(int fd, std::string data, Client *user)
 			Server::send_msg(ERR_BADCHANMASK(name[i]), user->get_fd());
 			return ;
 		}
-		// name[i] = name[i].substr(0, name[i].size() - 1);
 		if (name[i] == "#0")
 		{
 			this->leaveChannels(user);
@@ -119,7 +118,7 @@ void Server::join(int fd, std::string data, Client *user)
 		}
 		else
 		{
-			if (room->getInvOnlyMode())
+			if (room->getInvOnlyMode() && !room->isInvited(*user))
 			{
 				Server::send_msg(ERR_INVITEONLYCHAN(user->get_nickName(), room->get_name()), user->get_fd());
 				continue ;
