@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 12:37:54 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 14:24:27 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ void Server::addNew_Client()
     if (__fDs[0].revents & POLLIN)
     {
         if ((new_socket = accept(__fd_socket, (struct sockaddr *)&addr, (socklen_t *)&addrlen)) < 0)
+        {
+            close(__fd_socket);
             throw std::runtime_error("Error: accept failed");
+        }
         struct pollfd pfd;
         pfd.fd = new_socket;
         pfd.events = POLLIN;

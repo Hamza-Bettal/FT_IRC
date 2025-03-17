@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:40:16 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/17 12:42:00 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 14:22:20 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int connectToServer(const char *serverHost, int port)
     sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(port);
-    std::memcpy(&serverAddr.sin_addr.s_addr, server->h_addr, server->h_length);  // FIXED
+    std::memcpy(&serverAddr.sin_addr.s_addr, server->h_addr, server->h_length);
 
     if (connect(sock, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
