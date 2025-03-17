@@ -6,13 +6,14 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 14:24:27 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 18:29:42 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Server.hpp"
 #include "../includes/Channel.hpp"
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -150,6 +151,7 @@ void Server::ReceiveNewData(int fd)
     }
     if (client == NULL)
         return ;
+    std::cout << b_italic color "==>Client <" pos << fd << b_italic color "> Data: " pos << buff << std::endl;
     client->get_buffer().append(buff);
     size_t poss;
     if ((poss = client->get_buffer().find('\n')) != std::string::npos)
@@ -171,12 +173,12 @@ void Server::ReceiveNewData(int fd)
 
 void Server::handleCommands(int fd, std::string &data, Client *client)
 {
-	if (!std::strncmp(data.c_str(), "USER ", 5))
+    if (!std::strncmp(data.c_str(), "PASS ", 5))
+        passWord(fd, data);
+	else if (!std::strncmp(data.c_str(), "USER ", 5))
         userName(fd, data);
     else if (!std::strncmp(data.c_str(), "NICK ", 5))
         nickName(fd, data);
-    else if (!std::strncmp(data.c_str(), "PASS ", 5))
-        passWord(fd, data);
     else if (!std::strncmp(data.c_str(), "JOIN ", 5))
         join(fd, data, client);
     else if (!std::strncmp(data.c_str(), "TOPIC ", 5))
@@ -234,19 +236,33 @@ void Server::userName(int fd, std::string data)
     int count = 0;
     std::vector<std::string> sv = split(user, ' ');
     if (!sv.empty())
-        valid_user = sv[0];
+    {
+        if(parce_nick(sv[0]))
+            valid_user = sv[0];
+        else {
+            send_msg(ERR_ERRUSER(sv[0]), fd);
+            return ;
+        }
+        
+    }
     for(std::vector<std::string>::iterator it = sv.begin(); it != sv.end(); it++)
         count++;
     std::vector<Client>::iterator it = get_client(fd);
-    if (!it->get_hasPass()) 
-    {
-        send_msg(ERR_NOTREGISTERED, fd);
-        return ;
-    }
-    if (count >= 4)
+    // if (!it->get_hasPass()) 
+    // {
+    //     send_msg(ERR_NOTREGISTERED, fd);
+    //     return ;
+    // }
+    std::cout << "hasspass : " << it->get_hasPass() << std::endl;
+    std::cout << "count : " << count << std::endl;
+    if (it->get_hasPass() && count == 4)
     {
         it->set_userName(valid_user);
         it->set_hasUser(true);
+        std::cout << "user : " << it->get_userName() << std::endl;
+    }
+    else {
+        send_msg(ERR_NOTREGISTERED, fd);
     }
 }
 
@@ -292,14 +308,14 @@ void Server::nickName(int fd, std::string data)
     std::string nick = data.substr(5, data.size() - 5);
     std::vector<Client>::iterator it = get_client(fd);
     rmoveNew_line(nick);
+    if (!it->get_hasPass()) 
+    {
+        send_msg(ERR_NOTREGISTERED,fd);
+        return;
+    }
     if (!parce_nick(nick))
     {
         send_msg(ERR_ERRONEUSNICKNAME(nick), fd);
-        return;
-    }
-    else if (!it->get_hasPass()) 
-    {
-        send_msg(ERR_NOTREGISTERED,fd);
         return;
     }
     for (std::vector<Client>::iterator client = __clients.begin(); client != __clients.end(); ++client)
@@ -315,6 +331,7 @@ void Server::nickName(int fd, std::string data)
     {
         it->set_nickName(nick);
         it->set_hasNick(true);
+        std::cout << "nick : " << it->get_nickName() << std::endl;
     }
 }
 
@@ -324,10 +341,12 @@ void Server::passWord(int fd, std::string data)
     std::string pass = data.substr(5, data.size() - 5);
     std::vector<Client>::iterator it = get_client(fd);
     rmoveNew_line(pass);
+    std::cout << "pass : " << pass << "|__pass: " << __passWord << std::endl;
     if (pass == __passWord)
     {
         it->set_hasPass(true);
         it->set_IpAdd(getclient_IPadd(fd));
+        std::cout << "pass : " << it->get_hasPass() << std::endl;
     }
     else
         send_msg(ERR_PASSWDMISMATCH(it->get_nickName()), fd);

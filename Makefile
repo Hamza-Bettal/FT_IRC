@@ -2,7 +2,7 @@ C++ = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98 
 SRC = src/main.cpp src/Server.cpp src/Client.cpp src/Channel.cpp src/Join.cpp src/topic.cpp src/Invite.cpp src/kick.cpp src/privmsg.cpp src/mode.cpp
 BONUSSRC = bonus/bot.cpp bonus/main.cpp
-NAME = irc
+NAME = ircserv
 BONUSNAME = bot
 OBJCS = $(SRC:.cpp=.o)
 BONUSOBJCS = $(BONUSSRC:.cpp=.o)

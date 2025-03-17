@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 21:34:31 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/16 09:52:25 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 17:29:57 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Server::topic(std::string data, Client *user)
 	}
 	else if (topic[2][0] == ':')
 	{
-		if (topic[2].size() == 1)
+		if (topic[2].size() == 1 && topic.size() == 3)
 			room->set_topic("");
 		else if (!room->getTopicMode() || (room->getTopicMode() && room->isAdmine(*user)))
 			room->set_topic(data.substr(data.find(':') + 1));

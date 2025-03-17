@@ -9,6 +9,7 @@
 #define ERR_UNKNOWNCOMMAND(client, command)						PREFIX "421 " + client + " " + command + " :Unknown command" POSTFIX 
 #define ERR_CHANOPRIVSNEEDED(channel)					        PREFIX "482 " + channel + " :You're not channel operator" POSTFIX
 #define ERR_ERRONEUSNICKNAME(nick)						        PREFIX "432 " + nick + " :Erroneus nickname" POSTFIX 
+#define ERR_ERRUSER(nick)						                PREFIX "432 " + user + " :Erroneus user" POSTFIX 
 #define ERR_NOTEXTTOSEND()								        PREFIX "412 :No text to send" POSTFIX 
 #define ERR_NOSUCHCHANNEL(channel)						        PREFIX "403 " + channel + " :No such channel" POSTFIX 
 #define ERR_NOSUCHNICK(nick)							        PREFIX "401 " + nick + " :No such nick/channel" POSTFIX 

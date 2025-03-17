@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 17:59:40 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/17 14:42:36 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 14:49:35 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void handleResponse(int sock, std::string response)
         if (names.size() < 2)
         {
             sendMessage(sock, "PRIVMSG " + clientName + " : Invalid number of arguments");
+            return ;
         }
         std::string winner = names[std::rand() % names.size()];
         sendMessage(sock, "PRIVMSG " + clientName + " : ===> " + winner + " <=== is the chosen one");
