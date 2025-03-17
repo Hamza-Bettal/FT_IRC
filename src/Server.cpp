@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 23:33:13 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/17 23:41:51 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ void Server::ServerSocket()
         throw std::runtime_error("Error: setsockopt failed");
     }
     if (fcntl(__fd_socket, F_SETFL, O_NONBLOCK) < 0)
+    {
+        close(__fd_socket);
         throw std::runtime_error("Error: fcntl failed");
+    }
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
