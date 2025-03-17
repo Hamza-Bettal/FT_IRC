@@ -6,10 +6,9 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:17 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/16 09:53:10 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/16 14:02:03 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../includes/Channel.hpp"
 #include "../includes/Server.hpp"
@@ -29,11 +28,11 @@ void check_key(std::string pass, Client *user, Channel *room, int fd)
 			Server::send_msg(RPL_NOTOPIC(user->get_nickName(), room->get_name()), user->get_fd());
 		else
 			Server::send_msg(RPL_TOPIC(user->get_nickName(), room->get_name(), room->get_topic()), user->get_fd());
+		Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
+		Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), room->get_name()), user->get_fd());
     }
 	else
 		Server::send_msg(ERR_BADCHANNELKEY(user->get_nickName(), room->get_name()), fd);
-	Server::send_msg(RPL_NAMREPLY(user->get_nickName(), room->get_name(), room->nameReply()), user->get_fd());
-	Server::send_msg(RPL_ENDOFNAMES(user->get_nickName(), room->get_name()), user->get_fd());
 }
 
 void Server::part(std::string data, Client client)

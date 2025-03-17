@@ -44,7 +44,7 @@
 #define RPL_JOINMSG(hostname, ipaddress, channelname)	        (":" + hostname + "@" + ipaddress + " JOIN " + channelname + POSTFIX)
 #define RPL_JOIN(sender, channel)						        ":" + sender + " JOIN :" + channel + POSTFIX
 #define RPL_PART(sender, channel, reason)                       ":" + sender + " PART " + channel + " :" + reason + POSTFIX
-#define RPL_CHANGEMODE(hostname, channelname, mode)		(":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
+#define RPL_CHANGEMODE(hostname, channelname, mode)		        (":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
 #define RPL_UMODEIS(hostname, channelname, mode, user)	        ":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
 #define RPL_CHANNELMODEIS(client ,channel ,modestring, args)    ": 324 " + client + " " + channel + " " + modestring + " " + args + POSTFIX
 #define RPL_KICKMSG(sender, channel, target, comment)           ":" + sender + " KICK " + channel + " " + target + " :" + comment + POSTFIX

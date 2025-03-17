@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/16 09:52:19 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/16 14:17:52 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void Server::mode(std::string data, Client user)
 		}
 		bool isPos = command[2][0] == '+';
 		size_t curr = 3;
-		for (size_t i = 1; i < command[2].size(); i++)
+		for (size_t i = 1; i < command[2].size(); i++)//+o+o
 		{
 			if (command[2][i] == '+')
 				isPos = true;
@@ -76,6 +76,7 @@ void Server::mode(std::string data, Client user)
 					if (!member || !room->memberExist(*member))
 					{
 						Server::send_msg(ERR_USERNOTINCHANNEL(user.get_nickName(), room->get_name()), user.get_fd());
+						curr++;
 						continue ;
 					}
 					room->set_admin(*member);
@@ -112,6 +113,7 @@ void Server::mode(std::string data, Client user)
 					if (!member || !room->memberExist(*member))
 					{
 						Server::send_msg(ERR_USERNOTINCHANNEL(user.get_nickName(), room->get_name()), user.get_fd());
+						curr++;
 						continue ;
 					}
 					room->removeAdmin(*member);
@@ -126,7 +128,6 @@ void Server::mode(std::string data, Client user)
 			}
 			else
 				Server::send_msg(ERR_UMODEUNKNOWNFLAG(user.get_nickName()), user.get_fd());
-			
 		}
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/15 23:18:49 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/17 12:37:54 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../includes/Channel.hpp"
 #include <cstddef>
 #include <string>
+#include <unistd.h>
 #include <vector>
 
 bool Server::__signal = false;
@@ -45,7 +46,10 @@ void Server::ServerSocket()
     if (__fd_socket == -1)
         throw std::runtime_error("Error: socket failed");
     if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)//allow a server to reuse a recently closed port without waiting for it to be released by the operating system
+    {
+        close(__fd_socket);
         throw std::runtime_error("Error: setsockopt failed");
+    }
     if (fcntl(__fd_socket, F_SETFL, O_NONBLOCK) < 0)
         throw std::runtime_error("Error: fcntl failed");
     struct sockaddr_in addr;
@@ -54,9 +58,15 @@ void Server::ServerSocket()
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(__port);
     if (bind(__fd_socket, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+    {
+        close(__fd_socket);
         throw std::runtime_error("Error: bind failed");
-    if (listen(__fd_socket, 42) < 0)
+    }
+    if (listen(__fd_socket, 10) < 0)
+    {
+        close(__fd_socket);
         throw std::runtime_error("Error: listen failed");
+    }
     struct pollfd pfd;
     memset(&pfd, 0, sizeof(pfd));
     std::cout << gold"Server is running on port " pos << __port << std::endl;
@@ -99,7 +109,7 @@ void Server::addNew_Client()
 void Server::ReceiveNewData(int fd)
 {
     char buff[1024] = {0};
-    size_t num_bytes = recv(fd, buff, sizeof(buff) - 1, 0);
+    ssize_t num_bytes = recv(fd, buff, sizeof(buff) - 1, 0);
     std::string data;
     Client *client = NULL;
     if (num_bytes <= 0)
@@ -121,11 +131,11 @@ void Server::ReceiveNewData(int fd)
             }
         }
         else
-            std::cout << b_italic color "==>Client <" pos << fd << b_italic RED "> Error" pos << std::endl;
+            std::cout << b_italic color "==>Client <" pos << fd << b_italic RED "> Disconnected" pos << std::endl;
         clearAll_Fds(fd);
         return ;
     }
-    if (num_bytes != std::string::npos)
+    if (num_bytes < 1024)
         buff[num_bytes] = '\0';
     for (size_t i = 0; i < __clients.size(); i++)
     {
@@ -145,7 +155,6 @@ void Server::ReceiveNewData(int fd)
         client->get_buffer().erase(0, poss + 1);
         rmoveNew_line(command);
         handleCommands(fd, command, client);
-        std::cout << b_italic gold "==>Client <" pos << GREEN << fd << "> Data: " pos << command << std::endl;
     }
     else 
         client->get_buffer().append(" ");

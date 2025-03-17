@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:08:09 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/16 09:52:37 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 10:02:08 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void send_channel(std::string receiver, std::string msg, Client sender, Channel 
 	{
 		if (sender.get_fd() != members[i].get_fd())
 		{
-			Server::send_msg(RPL_PRIVMSG(sender.get_nickName(), receiver, msg), members[i].get_fd());
+			Server::send_msg(RPL_PRIVMSG(sender.get_nickName() + "!" + sender.get_userName() + "@" + sender.get_IpAdd(), receiver, msg), members[i].get_fd());
 		}
 	}
 }
@@ -44,10 +44,10 @@ void send_user(std::string receiver, std::string msg, Client sender, Client *rec
 		Server::send_msg(ERR_NOSUCHNICK(receiver), sender.get_fd());
 		return;
 	}
-	Server::send_msg(RPL_PRIVMSG(sender.get_nickName(), receiv->get_nickName(), msg), receiv->get_fd());
+	Server::send_msg(RPL_PRIVMSG(sender.get_nickName() + "!" + sender.get_userName() + "@" + sender.get_IpAdd(), receiv->get_nickName(), msg), receiv->get_fd());
 }
 
-void Server:: privmsg(std::string data, Client user)
+void Server::privmsg(std::string data, Client user)
 {
 	size_t found = data.find(':');
 	std::vector<std::string> command = Server::split(data, ' ');

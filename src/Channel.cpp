@@ -6,7 +6,7 @@
 /*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:09:47 by hbettal           #+#    #+#             */
-/*   Updated: 2025/03/16 09:20:23 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/16 13:25:36 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,19 @@ void Channel::kickMember(Client user)
 			return ;
 		}
 		it++;
+	}
+	if (isInvited(user))
+	{
+		std::vector<Client>::iterator it = invited.begin();
+		while (it != invited.end())
+		{
+			if (user.get_fd() == it->get_fd())
+			{
+				this->invited.erase(it);
+				return ;
+			}
+			it++;
+		}
 	}
 }
 

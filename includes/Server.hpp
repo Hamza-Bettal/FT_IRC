@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/15 23:11:30 by mohimi           ###   ########.fr       */
+/*   Updated: 2025/03/17 10:03:04 by hbettal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ class Server
 		void							invite(std::string data, Client user);
         void                            kick(std::string data, Client user);
 		void							mode(std::string data, Client user);
-		void							privmsg(std::string data, Client user);
+		void						    privmsg(std::string data, Client user);
         void                            leaveChannels(Client *user);
 		void							part(std::string data, Client client);
         ~Server();
