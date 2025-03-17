@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:32:42 by zait-bel          #+#    #+#             */
-/*   Updated: 2025/03/16 14:17:52 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 23:32:59 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ void Server::mode(std::string data, Client user)
 			Server::send_msg(RPL_CHANNELMODEIS(user.get_nickName(), room->get_name(), "+/-", "i/t/k/o/l"), user.get_fd());
 			return;
 		}
-		
+		if (!room->memberExist(user))
+		{
+			Server::send_msg(ERR_NOTONCHANNEL(user.get_nickName(), room->get_name()), user.get_fd());
+			return ;
+		}
 		if (!room->isAdmine(user))
 		{
 			Server::send_msg(ERR_CHANOPRIVSNEEDED(room->get_name()), user.get_fd());
@@ -46,7 +50,7 @@ void Server::mode(std::string data, Client user)
 		}
 		bool isPos = command[2][0] == '+';
 		size_t curr = 3;
-		for (size_t i = 1; i < command[2].size(); i++)//+o+o
+		for (size_t i = 1; i < command[2].size(); i++)
 		{
 			if (command[2][i] == '+')
 				isPos = true;

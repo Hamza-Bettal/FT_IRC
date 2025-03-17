@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 18:29:42 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/17 23:33:13 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void Server::ServerSocket()
     __fd_socket = socket(PF_INET, SOCK_STREAM, 0);
     if (__fd_socket == -1)
         throw std::runtime_error("Error: socket failed");
-    if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)//allow a server to reuse a recently closed port without waiting for it to be released by the operating system
+    if (setsockopt(__fd_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
     {
         close(__fd_socket);
         throw std::runtime_error("Error: setsockopt failed");
@@ -151,7 +151,6 @@ void Server::ReceiveNewData(int fd)
     }
     if (client == NULL)
         return ;
-    std::cout << b_italic color "==>Client <" pos << fd << b_italic color "> Data: " pos << buff << std::endl;
     client->get_buffer().append(buff);
     size_t poss;
     if ((poss = client->get_buffer().find('\n')) != std::string::npos)
@@ -248,18 +247,10 @@ void Server::userName(int fd, std::string data)
     for(std::vector<std::string>::iterator it = sv.begin(); it != sv.end(); it++)
         count++;
     std::vector<Client>::iterator it = get_client(fd);
-    // if (!it->get_hasPass()) 
-    // {
-    //     send_msg(ERR_NOTREGISTERED, fd);
-    //     return ;
-    // }
-    std::cout << "hasspass : " << it->get_hasPass() << std::endl;
-    std::cout << "count : " << count << std::endl;
     if (it->get_hasPass() && count == 4)
     {
         it->set_userName(valid_user);
         it->set_hasUser(true);
-        std::cout << "user : " << it->get_userName() << std::endl;
     }
     else {
         send_msg(ERR_NOTREGISTERED, fd);
@@ -331,7 +322,6 @@ void Server::nickName(int fd, std::string data)
     {
         it->set_nickName(nick);
         it->set_hasNick(true);
-        std::cout << "nick : " << it->get_nickName() << std::endl;
     }
 }
 
@@ -341,12 +331,10 @@ void Server::passWord(int fd, std::string data)
     std::string pass = data.substr(5, data.size() - 5);
     std::vector<Client>::iterator it = get_client(fd);
     rmoveNew_line(pass);
-    std::cout << "pass : " << pass << "|__pass: " << __passWord << std::endl;
     if (pass == __passWord)
     {
         it->set_hasPass(true);
         it->set_IpAdd(getclient_IPadd(fd));
-        std::cout << "pass : " << it->get_hasPass() << std::endl;
     }
     else
         send_msg(ERR_PASSWDMISMATCH(it->get_nickName()), fd);
