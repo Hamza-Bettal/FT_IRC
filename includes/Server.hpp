@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:49:46 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 10:03:04 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/18 00:55:14 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ class Server
         int                             get_Fdsocket();
         std::vector<Client>::iterator   get_client(int fd);
         void                            ReceiveNewData(int fd);
-        void                            clearAll_Fds(int fd_client);
+        void                            clearAll_Fds();
         void                            userName(int fd, std::string data);
         void                            nickName(int fd, std::string data);
         void                            passWord(int fd, std::string data);

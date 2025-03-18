@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:42:49 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/13 13:10:53 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/18 01:18:03 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int main(int ac, char **av)
 {
+    signal(SIGINT, Server::shutdown_sig);
+    signal(SIGQUIT, Server::shutdown_sig);
 	int			port;
 	std::string	password;
 	if (ac != 3 || !Server::setPort(av[1], port) || !Server::check_Passowrd(av[2]))
@@ -25,11 +27,9 @@ int main(int ac, char **av)
 	try
 	{
 		s.Server_Launcher();
-        signal(SIGINT, Server::shutdown_sig);
-        signal(SIGQUIT, Server::shutdown_sig);
 	} catch (std::exception &e)
 	{
-        s.clearAll_Fds(s.get_Fdsocket());
+        s.clearAll_Fds();
 		std::cout << e.what() << std::endl;
 		return (1);
 	}

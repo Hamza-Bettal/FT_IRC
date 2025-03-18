@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbettal <hbettal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mohimi <mohimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:23:33 by mohimi            #+#    #+#             */
-/*   Updated: 2025/03/17 23:41:51 by hbettal          ###   ########.fr       */
+/*   Updated: 2025/03/18 01:26:47 by mohimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ bool Server::__signal = false;
 void Server::shutdown_sig(int signal)
 {
     (void)signal;
-    std::cout << "Server shutdown" << std::endl;
     __signal = true;
+    std::cout << RED "Server shutdown" pos << std::endl;
 }
 
 Server::Server(int port, std::string pass_word) : __port(port), __passWord(pass_word)
@@ -37,6 +37,10 @@ void Server::Server_Launcher()
     ServerSocket();
     while (!__signal)
         addNew_Client();
+    if (__signal)
+    {
+        clearAll_Fds();
+    }
 }
 
 void Server::ServerSocket()
@@ -66,7 +70,7 @@ void Server::ServerSocket()
         close(__fd_socket);
         throw std::runtime_error("Error: bind failed");
     }
-    if (listen(__fd_socket, 10) < 0)
+    if (listen(__fd_socket, 128) < 0)
     {
         close(__fd_socket);
         throw std::runtime_error("Error: listen failed");
@@ -86,8 +90,11 @@ void Server::addNew_Client()
     int new_socket;
     struct sockaddr_in addr;
     int addrlen = sizeof(addr);
-    if (poll(__fDs.data(), __fDs.size(), -1) < 0)
+    if (poll(__fDs.data(), __fDs.size(), 0) < 0)
+    {
+        clearAll_Fds();
         throw std::runtime_error("Error: poll failed");
+    }
     if (__fDs[0].revents & POLLIN)
     {
         if ((new_socket = accept(__fd_socket, (struct sockaddr *)&addr, (socklen_t *)&addrlen)) < 0)
@@ -132,6 +139,7 @@ void Server::ReceiveNewData(int fd)
                     __clients[i].set_hasNick(false);
                     __clients[i].set_hasPass(false);
                     __clients[i].set_hasUser(false);
+                    close(fd);
                     __clients.erase(__clients.begin() + i);
                     break;
                 }
@@ -139,7 +147,6 @@ void Server::ReceiveNewData(int fd)
         }
         else
             std::cout << b_italic color "==>Client <" pos << fd << b_italic RED "> Disconnected" pos << std::endl;
-        clearAll_Fds(fd);
         return ;
     }
     if (num_bytes < 1024)
@@ -199,22 +206,19 @@ void Server::handleCommands(int fd, std::string &data, Client *client)
         Server::send_msg(ERR_UNKNOWNCOMMAND(client->get_nickName(), data), client->get_fd());
 }
 
-void Server::clearAll_Fds(int fd_client)
+void Server::clearAll_Fds()
 {
-    close(fd_client);
+    close(__fd_socket);
     for (size_t i = 0; i < __fDs.size(); i++)
     {
-        if(__fDs[i].fd == fd_client)
-        {
-            __fDs.erase(__fDs.begin() + i);
-            break; 
-        }
+        close(__fDs[i].fd);
+        __fDs.erase(__fDs.begin() + i);
     }
 }
 
 Server::~Server()
 {
-    close(__fd_socket);
+    clearAll_Fds();
 }
 
 int Server::get_Fdsocket()
